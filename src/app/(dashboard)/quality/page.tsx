@@ -30,7 +30,7 @@ const resultConfig: Record<string, { label: string; color: string; icon: typeof 
   PASSED: { label: 'Passed', color: 'bg-emerald-500/15 text-emerald-400', icon: CheckCircle2 },
   FAILED: { label: 'Failed', color: 'bg-red-500/15 text-red-400', icon: XCircle },
   CONDITIONAL: { label: 'Conditional', color: 'bg-amber-500/15 text-amber-400', icon: AlertTriangle },
-  PENDING: { label: 'Pending', color: 'bg-white/10 text-white/50', icon: AlertTriangle },
+  PENDING: { label: 'Pending', color: 'bg-gray-100 text-muted dark:bg-white/10 dark:text-white/50', icon: AlertTriangle },
 };
 
 const checkPoints = [
@@ -57,9 +57,9 @@ export default function QualityControlPage() {
             <div key={stat.label} className={`rounded-2xl border p-5 ${stat.color}`}>
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-xs font-medium text-white/50">{stat.label}</p>
-                  <p className="mt-1.5 font-display text-2xl font-bold text-white">{stat.value}</p>
-                  <p className="mt-1 text-xs text-white/40">{stat.sub}</p>
+                  <p className="text-xs font-medium text-muted dark:text-white/50">{stat.label}</p>
+                  <p className="mt-1.5 font-display text-2xl font-bold text-brown dark:text-white">{stat.value}</p>
+                  <p className="mt-1 text-xs text-muted dark:text-white/40">{stat.sub}</p>
                 </div>
                 <div className="rounded-xl border border-current/20 bg-current/10 p-2">
                   <Icon className="h-5 w-5" />
@@ -71,20 +71,20 @@ export default function QualityControlPage() {
       </div>
 
       {/* QC Checkpoints */}
-      <div className="rounded-2xl border border-white/8 bg-white/5 p-5">
-        <h3 className="mb-5 font-display font-semibold text-white">QC Checkpoints by Stage</h3>
+      <div className="rounded-2xl border border-border bg-white p-5 dark:border-white/8 dark:bg-white/5">
+        <h3 className="mb-5 font-display font-semibold text-brown dark:text-white">QC Checkpoints by Stage</h3>
         <div className="grid gap-4 sm:grid-cols-2">
           {checkPoints.map((cp, i) => (
-            <div key={cp.stage} className="rounded-xl border border-white/8 bg-white/5 p-4">
+            <div key={cp.stage} className="rounded-xl border border-border bg-cream p-4 dark:border-white/8 dark:bg-white/5">
               <div className="mb-3 flex items-center gap-2">
                 <span className="flex h-6 w-6 items-center justify-center rounded-full bg-lime-500/20 text-xs font-bold text-lime-400">
                   {i + 1}
                 </span>
-                <p className="font-semibold text-white text-sm">{cp.stage}</p>
+                <p className="font-semibold text-brown text-sm dark:text-white">{cp.stage}</p>
               </div>
               <ul className="space-y-1.5">
                 {cp.checks.map((check) => (
-                  <li key={check} className="flex items-center gap-2 text-xs text-white/50">
+                  <li key={check} className="flex items-center gap-2 text-xs text-muted dark:text-white/50">
                     <CheckCircle2 className="h-3 w-3 flex-shrink-0 text-lime-400" />
                     {check}
                   </li>
@@ -96,30 +96,30 @@ export default function QualityControlPage() {
       </div>
 
       {/* Recent QC checks */}
-      <div className="rounded-2xl border border-white/8 bg-white/5">
-        <div className="flex items-center justify-between border-b border-white/8 px-5 py-4">
-          <h3 className="font-display font-semibold text-white">Recent Quality Checks</h3>
+      <div className="rounded-2xl border border-border bg-white dark:border-white/8 dark:bg-white/5">
+        <div className="flex items-center justify-between border-b border-border px-5 py-4 dark:border-white/8">
+          <h3 className="font-display font-semibold text-brown dark:text-white">Recent Quality Checks</h3>
           <span className="ice-badge bg-lime-500/15 text-lime-400">Today</span>
         </div>
-        <div className="divide-y divide-white/5">
+        <div className="divide-y divide-border dark:divide-white/5">
           {recentChecks.map((check) => {
             const cfg = resultConfig[check.result] ?? resultConfig.PENDING!;
             const ResultIcon = cfg.icon;
             return (
-              <div key={check.ref} className="flex items-center justify-between px-5 py-4 transition hover:bg-white/5">
+              <div key={check.ref} className="flex items-center justify-between px-5 py-4 transition hover:bg-gray-50 dark:hover:bg-white/5">
                 <div className="flex items-center gap-4">
                   <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-lime-500/10 text-lime-400">
                     <Package className="h-4 w-4" />
                   </div>
                   <div>
-                    <p className="font-semibold text-white">{check.ref}</p>
-                    <p className="text-xs text-white/40">{check.type} · {check.item}</p>
+                    <p className="font-semibold text-brown dark:text-white">{check.ref}</p>
+                    <p className="text-xs text-muted dark:text-white/40">{check.type} · {check.item}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
                   <div className="hidden text-right sm:block">
-                    <p className="text-xs text-white/50">Temp: {check.temp}</p>
-                    <p className="text-xs text-white/30">{check.checked} · {check.time}</p>
+                    <p className="text-xs text-muted dark:text-white/50">Temp: {check.temp}</p>
+                    <p className="text-xs text-muted/70 dark:text-white/30">{check.checked} · {check.time}</p>
                   </div>
                   <span className={`flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${cfg.color}`}>
                     <ResultIcon className="h-3 w-3" />
@@ -136,8 +136,8 @@ export default function QualityControlPage() {
       <div className="flex items-start gap-4 rounded-2xl border border-red-500/20 bg-red-500/10 p-5">
         <XCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-400" />
         <div>
-          <p className="font-semibold text-red-300">1 Batch in Quarantine</p>
-          <p className="mt-1 text-sm text-red-400/70">
+          <p className="font-semibold text-red-700 dark:text-red-300">1 Batch in Quarantine</p>
+          <p className="mt-1 text-sm text-red-600/80 dark:text-red-400/70">
             GRN-0088 (Chocolate Type B) failed microbial testing. Stock has been quarantined and marked for return to supplier. Approval required before disposal or retest.
           </p>
         </div>

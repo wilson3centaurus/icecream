@@ -74,9 +74,9 @@ export default function MaintenancePage() {
             <div key={stat.label} className={`rounded-2xl border p-5 ${stat.color}`}>
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-xs font-medium text-white/50">{stat.label}</p>
-                  <p className="mt-1.5 font-display text-2xl font-bold text-white">{stat.value}</p>
-                  <p className="mt-1 text-xs text-white/40">{stat.sub}</p>
+                  <p className="text-xs font-medium text-muted dark:text-white/50">{stat.label}</p>
+                  <p className="mt-1.5 font-display text-2xl font-bold text-brown dark:text-white">{stat.value}</p>
+                  <p className="mt-1 text-xs text-muted dark:text-white/40">{stat.sub}</p>
                 </div>
                 <div className="rounded-xl border border-current/20 bg-current/10 p-2">
                   <Icon className="h-5 w-5" />
@@ -88,25 +88,25 @@ export default function MaintenancePage() {
       </div>
 
       {/* Machine status grid */}
-      <div className="rounded-2xl border border-white/8 bg-white/5 p-5">
-        <h3 className="mb-4 font-display font-semibold text-white">Machine Status</h3>
+      <div className="rounded-2xl border border-border bg-white p-5 dark:border-white/8 dark:bg-white/5">
+        <h3 className="mb-4 font-display font-semibold text-brown dark:text-white">Machine Status</h3>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {machines.map((machine) => {
             const cfg = statusMachine[machine.status] ?? statusMachine.OPERATIONAL!;
             const StatusIcon = cfg.icon;
             return (
-              <div key={machine.id} className="rounded-xl border border-white/8 bg-white/5 p-4">
+              <div key={machine.id} className="rounded-xl border border-border bg-cream p-4 dark:border-white/8 dark:bg-white/5">
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-center gap-2">
                     <StatusIcon className={`h-4 w-4 flex-shrink-0 ${cfg.color}`} />
-                    <p className="text-xs font-semibold text-white/50">{machine.id}</p>
+                    <p className="text-xs font-semibold text-muted dark:text-white/50">{machine.id}</p>
                   </div>
                   <span className={`ice-badge text-[10px] ${machine.status === 'OPERATIONAL' ? 'bg-emerald-500/15 text-emerald-400' : machine.status === 'BREAKDOWN' ? 'bg-red-500/15 text-red-400' : 'bg-amber-500/15 text-amber-400'}`}>
                     {machine.status}
                   </span>
                 </div>
-                <p className="mt-2 text-sm font-semibold text-white leading-snug">{machine.name}</p>
-                <div className="mt-2 flex gap-4 text-xs text-white/30">
+                <p className="mt-2 text-sm font-semibold text-brown leading-snug dark:text-white">{machine.name}</p>
+                <div className="mt-2 flex gap-4 text-xs text-muted/70 dark:text-white/30">
                   <span>Next: {machine.nextService}</span>
                   {machine.downtime !== '0h' && <span className="text-amber-400">⬇ {machine.downtime}</span>}
                 </div>
@@ -120,28 +120,28 @@ export default function MaintenancePage() {
       <div className="flex items-start gap-4 rounded-2xl border border-red-500/20 bg-red-500/10 p-5">
         <XCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-400" />
         <div>
-          <p className="font-semibold text-red-300">Active Breakdown: Chocolate Coating Unit (MC-003)</p>
-          <p className="mt-1 text-sm text-red-400/70">
+          <p className="font-semibold text-red-700 dark:text-red-300">Active Breakdown: Chocolate Coating Unit (MC-003)</p>
+          <p className="mt-1 text-sm text-red-600/80 dark:text-red-400/70">
             Machine reported down at 06:30 today. Technician M. Dube assigned. Estimated repair time: 3 hours. Production line using backup manual coating process. Downtime impact being tracked.
           </p>
         </div>
       </div>
 
       {/* Recent maintenance records */}
-      <div className="rounded-2xl border border-white/8 bg-white/5">
-        <div className="flex items-center justify-between border-b border-white/8 px-5 py-4">
-          <h3 className="font-display font-semibold text-white">Recent Maintenance Records</h3>
+      <div className="rounded-2xl border border-border bg-white dark:border-white/8 dark:bg-white/5">
+        <div className="flex items-center justify-between border-b border-border px-5 py-4 dark:border-white/8">
+          <h3 className="font-display font-semibold text-brown dark:text-white">Recent Maintenance Records</h3>
         </div>
-        <div className="divide-y divide-white/5">
+        <div className="divide-y divide-border dark:divide-white/5">
           {recentWork.map((record) => (
-            <div key={record.id} className="flex items-center justify-between px-5 py-4 transition hover:bg-white/5">
+            <div key={record.id} className="flex items-center justify-between px-5 py-4 transition hover:bg-gray-50 dark:hover:bg-white/5">
               <div className="flex items-center gap-4">
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-500/10 text-cyan-400">
                   <Wrench className="h-4 w-4" />
                 </div>
                 <div>
-                  <p className="font-semibold text-white">{record.id} · {record.machine}</p>
-                  <p className="text-xs text-white/40">{record.tech} · {record.date}</p>
+                  <p className="font-semibold text-brown dark:text-white">{record.id} · {record.machine}</p>
+                  <p className="text-xs text-muted dark:text-white/40">{record.tech} · {record.date}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
@@ -149,7 +149,7 @@ export default function MaintenancePage() {
                 <span className={`ice-badge text-[10px] ${record.status === 'COMPLETED' ? 'bg-emerald-500/15 text-emerald-400' : 'bg-amber-500/15 text-amber-400'}`}>
                   {record.status === 'COMPLETED' ? 'Done' : 'In Progress'}
                 </span>
-                <p className="hidden text-sm font-semibold text-white sm:block">{record.cost}</p>
+                <p className="hidden text-sm font-semibold text-brown sm:block dark:text-white">{record.cost}</p>
               </div>
             </div>
           ))}

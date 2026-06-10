@@ -29,7 +29,7 @@ export default function CustomersPage() {
         description="Manage customer accounts, credit limits and payment history."
         actions={
           <div className="flex items-center gap-3">
-            <Link href="/sales" className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white/60 transition hover:bg-white/10">
+            <Link href="/sales" className="inline-flex items-center gap-2 rounded-xl border border-border bg-white px-3 py-2.5 text-sm text-muted transition hover:bg-gray-50 dark:border-white/10 dark:bg-white/5 dark:text-white/60 dark:hover:bg-white/10">
               <ArrowLeft className="h-4 w-4" />
               Back
             </Link>
@@ -45,45 +45,45 @@ export default function CustomersPage() {
       <div className="flex items-start gap-3 rounded-2xl border border-red-500/20 bg-red-500/8 p-4">
         <AlertTriangle className="mt-0.5 h-4 w-4 flex-shrink-0 text-red-400" />
         <div>
-          <p className="text-sm font-semibold text-red-300">1 customer over credit limit</p>
-          <p className="mt-0.5 text-xs text-red-400/70">Harare Hotels Ltd has exceeded their $15,000 credit limit. New orders are blocked until payment is received.</p>
+          <p className="text-sm font-semibold text-red-700 dark:text-red-300">1 customer over credit limit</p>
+          <p className="mt-0.5 text-xs text-red-600/80 dark:text-red-400/70">Harare Hotels Ltd has exceeded their $15,000 credit limit. New orders are blocked until payment is received.</p>
         </div>
       </div>
 
       {/* Table */}
-      <div className="overflow-hidden rounded-2xl border border-white/8 bg-white/3">
+      <div className="overflow-hidden rounded-2xl border border-border bg-white dark:border-white/8 dark:bg-white/5">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-white/8">
-              <th className="px-5 py-3.5 text-left text-xs font-medium text-white/40">ID</th>
-              <th className="px-5 py-3.5 text-left text-xs font-medium text-white/40">Customer</th>
-              <th className="px-5 py-3.5 text-left text-xs font-medium text-white/40">Contact</th>
-              <th className="px-5 py-3.5 text-right text-xs font-medium text-white/40">Credit Limit</th>
-              <th className="px-5 py-3.5 text-right text-xs font-medium text-white/40">Balance</th>
-              <th className="px-5 py-3.5 text-left text-xs font-medium text-white/40">Status</th>
+            <tr className="border-b border-border dark:border-white/8">
+              <th className="px-5 py-3.5 text-left text-xs font-medium text-muted dark:text-white/40">ID</th>
+              <th className="px-5 py-3.5 text-left text-xs font-medium text-muted dark:text-white/40">Customer</th>
+              <th className="px-5 py-3.5 text-left text-xs font-medium text-muted dark:text-white/40">Contact</th>
+              <th className="px-5 py-3.5 text-right text-xs font-medium text-muted dark:text-white/40">Credit Limit</th>
+              <th className="px-5 py-3.5 text-right text-xs font-medium text-muted dark:text-white/40">Balance</th>
+              <th className="px-5 py-3.5 text-left text-xs font-medium text-muted dark:text-white/40">Status</th>
               <th className="px-5 py-3.5" />
             </tr>
           </thead>
           <tbody>
             {customers.map((c) => {
-                const cfg = statusConfig[c.status] ?? { label: c.status, color: 'bg-white/8 text-white/40' };
+              const cfg = statusConfig[c.status] ?? { label: c.status, color: 'bg-gray-100 text-muted dark:bg-white/8 dark:text-white/40' };
               return (
-                <tr key={c.id} className="border-b border-white/5 transition hover:bg-white/4 last:border-0">
-                  <td className="px-5 py-3.5 font-mono text-xs text-white/40">{c.id}</td>
+                <tr key={c.id} className="border-b border-border transition hover:bg-gray-50 last:border-0 dark:border-white/5 dark:hover:bg-white/4">
+                  <td className="px-5 py-3.5 font-mono text-xs text-muted dark:text-white/40">{c.id}</td>
                   <td className="px-5 py-3.5">
-                    <p className="font-medium text-white">{c.name}</p>
-                    <p className="text-[11px] text-white/40">{c.phone}</p>
+                    <p className="font-medium text-brown dark:text-white">{c.name}</p>
+                    <p className="text-[11px] text-muted dark:text-white/40">{c.phone}</p>
                   </td>
-                  <td className="px-5 py-3.5 text-white/50">{c.contact}</td>
-                  <td className="px-5 py-3.5 text-right font-medium text-white">{c.creditLimit}</td>
-                  <td className={`px-5 py-3.5 text-right font-semibold ${c.status === 'OVER_LIMIT' ? 'text-red-400' : c.status === 'NEAR_LIMIT' ? 'text-amber-400' : 'text-white'}`}>
+                  <td className="px-5 py-3.5 text-muted dark:text-white/50">{c.contact}</td>
+                  <td className="px-5 py-3.5 text-right font-medium text-brown dark:text-white">{c.creditLimit}</td>
+                  <td className={`px-5 py-3.5 text-right font-semibold ${c.status === 'OVER_LIMIT' ? 'text-red-400' : c.status === 'NEAR_LIMIT' ? 'text-amber-400' : 'text-brown dark:text-white'}`}>
                     {c.balance}
                   </td>
                   <td className="px-5 py-3.5">
                     <span className={`rounded-full px-2.5 py-1 text-[10px] font-semibold ${cfg.color}`}>{cfg.label}</span>
                   </td>
                   <td className="px-5 py-3.5 text-right">
-                    <button className="rounded-lg p-1.5 text-white/30 transition hover:bg-white/8 hover:text-white">
+                    <button className="rounded-lg p-1.5 text-muted/70 transition hover:bg-gray-100 hover:text-brown dark:text-white/30 dark:hover:bg-white/8 dark:hover:text-white">
                       <Eye className="h-4 w-4" />
                     </button>
                   </td>

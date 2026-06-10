@@ -7,6 +7,7 @@ import {
   TrendingDown,
   TrendingUp
 } from 'lucide-react';
+import { useTheme } from 'next-themes';
 import { PageHeader } from '@/components/dashboard/page-header';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
@@ -28,6 +29,15 @@ const departments = [
 ];
 
 export default function BudgetPage() {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === 'dark';
+  const axisColor = isDark ? 'rgba(255,255,255,0.3)' : 'rgba(59,31,18,0.5)';
+  const gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(59,31,18,0.08)';
+  const budgetBarFill = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(59,31,18,0.08)';
+  const tooltipStyle = isDark
+    ? { background: '#1a0700', border: '1px solid rgba(249,115,22,0.2)', borderRadius: '12px', color: '#fff' }
+    : { background: '#fff', border: '1px solid #F3D7B6', borderRadius: '12px', color: '#3B1F12' };
+
   const chartData = departments.map((d) => ({
     name: d.name,
     budget: d.budget,
@@ -51,9 +61,9 @@ export default function BudgetPage() {
             <div key={stat.label} className={`rounded-2xl border p-5 ${stat.color}`}>
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-xs font-medium text-white/50">{stat.label}</p>
-                  <p className="mt-1.5 font-display text-2xl font-bold text-white">{stat.value}</p>
-                  <p className="mt-1 text-xs text-white/40">{stat.sub}</p>
+                  <p className="text-xs font-medium text-muted dark:text-white/50">{stat.label}</p>
+                  <p className="mt-1.5 font-display text-2xl font-bold text-brown dark:text-white">{stat.value}</p>
+                  <p className="mt-1 text-xs text-muted dark:text-white/40">{stat.sub}</p>
                 </div>
                 <div className="rounded-xl border border-current/20 bg-current/10 p-2">
                   <Icon className="h-5 w-5" />
@@ -65,39 +75,39 @@ export default function BudgetPage() {
       </div>
 
       {/* Chart */}
-      <div className="rounded-2xl border border-white/8 bg-white/5 p-5">
-        <h3 className="mb-4 font-display font-semibold text-white">Budget vs Actual — By Department</h3>
+      <div className="rounded-2xl border border-border bg-white p-5 dark:border-white/8 dark:bg-white/5">
+        <h3 className="mb-4 font-display font-semibold text-brown dark:text-white">Budget vs Actual — By Department</h3>
         <div className="h-72">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={chartData} barGap={4}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
-              <XAxis dataKey="name" stroke="rgba(255,255,255,0.3)" fontSize={11} />
-              <YAxis stroke="rgba(255,255,255,0.3)" fontSize={11} tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} />
+              <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
+              <XAxis dataKey="name" stroke={axisColor} fontSize={11} />
+              <YAxis stroke={axisColor} fontSize={11} tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} />
               <Tooltip
-                contentStyle={{ background: '#1a0700', border: '1px solid rgba(249,115,22,0.2)', borderRadius: '12px', color: '#fff' }}
+                contentStyle={tooltipStyle}
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 formatter={((v: number) => [`$${v.toLocaleString()}`, '']) as any}
               />
-              <Bar dataKey="budget" fill="rgba(255,255,255,0.08)" radius={[4, 4, 0, 0]} name="Budget" />
+              <Bar dataKey="budget" fill={budgetBarFill} radius={[4, 4, 0, 0]} name="Budget" />
               <Bar dataKey="actual" fill="#f97316" radius={[4, 4, 0, 0]} name="Actual" />
             </BarChart>
           </ResponsiveContainer>
         </div>
-        <div className="mt-3 flex items-center gap-4 text-xs text-white/40">
+        <div className="mt-3 flex items-center gap-4 text-xs text-muted dark:text-white/40">
           <span className="flex items-center gap-1.5"><span className="h-2 w-4 rounded bg-orange" />Actual</span>
-          <span className="flex items-center gap-1.5"><span className="h-2 w-4 rounded bg-white/10" />Budget</span>
+          <span className="flex items-center gap-1.5"><span className="h-2 w-4 rounded bg-gray-300 dark:bg-white/10" />Budget</span>
         </div>
       </div>
 
       {/* Dept table */}
-      <div className="rounded-2xl border border-white/8 bg-white/5">
-        <div className="border-b border-white/8 px-5 py-4">
-          <h3 className="font-display font-semibold text-white">Departmental Budget Summary — June 2026</h3>
+      <div className="rounded-2xl border border-border bg-white dark:border-white/8 dark:bg-white/5">
+        <div className="border-b border-border px-5 py-4 dark:border-white/8">
+          <h3 className="font-display font-semibold text-brown dark:text-white">Departmental Budget Summary — June 2026</h3>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-white/5 text-left text-xs text-white/30">
+              <tr className="border-b border-border text-left text-xs text-muted dark:border-white/5 dark:text-white/30">
                 <th className="px-5 py-3 font-medium">Department</th>
                 <th className="px-5 py-3 font-medium text-right">Budget</th>
                 <th className="px-5 py-3 font-medium text-right">Actual</th>
@@ -105,21 +115,21 @@ export default function BudgetPage() {
                 <th className="px-5 py-3 font-medium text-right">Utilisation</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-border dark:divide-white/5">
               {departments.map((dept) => {
                 const variance = dept.budget - dept.actual;
                 const utilisation = Math.round((dept.actual / dept.budget) * 100);
                 const isOver = variance < 0;
                 return (
-                  <tr key={dept.name} className="transition hover:bg-white/5">
+                  <tr key={dept.name} className="transition hover:bg-gray-50 dark:hover:bg-white/5">
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-2">
                         <span className="h-2 w-2 rounded-full" style={{ backgroundColor: dept.color }} />
-                        <span className="font-semibold text-white">{dept.name}</span>
+                        <span className="font-semibold text-brown dark:text-white">{dept.name}</span>
                       </div>
                     </td>
-                    <td className="px-5 py-4 text-right text-white">${dept.budget.toLocaleString()}</td>
-                    <td className="px-5 py-4 text-right text-white">${dept.actual.toLocaleString()}</td>
+                    <td className="px-5 py-4 text-right text-brown dark:text-white">${dept.budget.toLocaleString()}</td>
+                    <td className="px-5 py-4 text-right text-brown dark:text-white">${dept.actual.toLocaleString()}</td>
                     <td className={`px-5 py-4 text-right font-semibold ${isOver ? 'text-red-400' : 'text-emerald-400'}`}>
                       <span className="flex items-center justify-end gap-1">
                         {isOver ? <TrendingUp className="h-3.5 w-3.5" /> : <TrendingDown className="h-3.5 w-3.5" />}
@@ -128,13 +138,13 @@ export default function BudgetPage() {
                     </td>
                     <td className="px-5 py-4 text-right">
                       <div className="flex items-center justify-end gap-2">
-                        <div className="h-1.5 w-16 overflow-hidden rounded-full bg-white/10">
+                        <div className="h-1.5 w-16 overflow-hidden rounded-full bg-gray-200 dark:bg-white/10">
                           <div
                             className={`h-full rounded-full ${isOver ? 'bg-red-400' : 'bg-emerald-400'}`}
                             style={{ width: `${Math.min(utilisation, 100)}%` }}
                           />
                         </div>
-                        <span className={`text-xs ${isOver ? 'text-red-400' : 'text-white/50'}`}>{utilisation}%</span>
+                        <span className={`text-xs ${isOver ? 'text-red-400' : 'text-muted dark:text-white/50'}`}>{utilisation}%</span>
                       </div>
                     </td>
                   </tr>
@@ -150,15 +160,15 @@ export default function BudgetPage() {
         <div className="flex items-start gap-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-5">
           <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-emerald-400" />
           <div>
-            <p className="font-semibold text-emerald-300">6 Departments Under Budget</p>
-            <p className="mt-1 text-sm text-emerald-400/70">Production, Procurement, Stores, Sales, Admin, and Finance are all tracking below their monthly budget allocations.</p>
+            <p className="font-semibold text-emerald-700 dark:text-emerald-300">6 Departments Under Budget</p>
+            <p className="mt-1 text-sm text-emerald-600/80 dark:text-emerald-400/70">Production, Procurement, Stores, Sales, Admin, and Finance are all tracking below their monthly budget allocations.</p>
           </div>
         </div>
         <div className="flex items-start gap-4 rounded-2xl border border-red-500/20 bg-red-500/10 p-5">
           <TrendingUp className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-400" />
           <div>
-            <p className="font-semibold text-red-300">Maintenance Exceeds Budget by $340</p>
-            <p className="mt-1 text-sm text-red-400/70">Unplanned repair cost for Chocolate Coating Unit breakdown contributed to the overspend. MD approval required for budget amendment.</p>
+            <p className="font-semibold text-red-700 dark:text-red-300">Maintenance Exceeds Budget by $340</p>
+            <p className="mt-1 text-sm text-red-600/80 dark:text-red-400/70">Unplanned repair cost for Chocolate Coating Unit breakdown contributed to the overspend. MD approval required for budget amendment.</p>
           </div>
         </div>
       </div>

@@ -1,14 +1,14 @@
 ﻿'use client';
 
 import { useEffect, useState } from 'react';
-import { Bell, Building2, Hash } from 'lucide-react';
+import { Bell, Building2, Hash, Mail } from 'lucide-react';
 
 import { EmptyState, LoadingState, StatCard } from '@/components/ui-library';
 
 import { PageHeader } from '@/components/dashboard/page-header';
 import { SettingsNav } from '@/components/settings/settings-nav';
 import { Button } from '@/components/ui/button';
-import { useSettingsOverview, useSettingsSummary, useUpdateSettingsOverview } from '@/hooks/settings/useSettings';
+import { useSettingsOverview, useSettingsSummary, useUpdateSettingsOverview, useEmailConfig, useUpdateEmailConfig, type EmailConfigData } from '@/hooks/settings/useSettings';
 
 interface SettingsFormState {
   companyProfile: {
@@ -59,12 +59,29 @@ const defaultState: SettingsFormState = {
   }
 };
 
+const defaultEmailConfig: EmailConfigData = {
+  fromEmail: '',
+  fromName: 'Absolute Ice Cream ERP',
+  smtpHost: 'smtp.gmail.com',
+  smtpPort: 587,
+  appPassword: '',
+};
+
 export default function SettingsOverviewPage() {
   const overviewQuery = useSettingsOverview();
   const summaryQuery = useSettingsSummary();
   const updateOverview = useUpdateSettingsOverview();
+  const emailConfigQuery = useEmailConfig();
+  const updateEmailConfig = useUpdateEmailConfig();
   const [formState, setFormState] = useState<SettingsFormState>(defaultState);
   const [message, setMessage] = useState<string | null>(null);
+  const [emailForm, setEmailForm] = useState<EmailConfigData>(defaultEmailConfig);
+  const [emailMessage, setEmailMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!emailConfigQuery.data) return;
+    setEmailForm({ ...defaultEmailConfig, ...emailConfigQuery.data });
+  }, [emailConfigQuery.data]);
 
   useEffect(() => {
     if (!overviewQuery.data) {
@@ -230,6 +247,82 @@ export default function SettingsOverviewPage() {
           {message}
         </div>
       ) : null}
+
+      {/* Email / SMTP Configuration */}
+      <section className="space-y-4 rounded-2xl border border-border bg-white p-6 shadow-sm dark:border-darkBorder dark:bg-darkCard">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Mail className="h-5 w-5 text-orange" />
+            <h3 className="text-lg font-semibold text-brown dark:text-darkText">Email / SMTP Configuration</h3>
+          </div>
+          <Button
+            onClick={async () => {
+              try {
+                await updateEmailConfig.mutateAsync(emailForm);
+                setEmailMessage('Email settings saved.');
+              } catch (error) {
+                setEmailMessage(error instanceof Error ? error.message : 'Failed to save email settings.');
+              }
+            }}
+            disabled={updateEmailConfig.isPending}
+          >
+            {updateEmailConfig.isPending ? 'Saving…' : 'Save Email Settings'}
+          </Button>
+        </div>
+        <p className="text-sm text-muted dark:text-darkMuted">
+          Configure the SMTP sender used for system notifications. Use a Gmail App Password (not your regular password) if using Google Workspace.
+        </p>
+        <div className="grid gap-4 md:grid-cols-2">
+          {(
+            [
+              ['fromEmail', 'Sending Email (From Address)', 'text', 'e.g. noreply@absoluteicecream.co.zw'],
+              ['fromName', 'Sender Display Name', 'text', 'e.g. Absolute Ice Cream ERP'],
+              ['smtpHost', 'SMTP Host', 'text', 'e.g. smtp.gmail.com'],
+              ['smtpPort', 'SMTP Port', 'number', '587'],
+            ] as Array<[keyof EmailConfigData, string, string, string]>
+          ).map(([key, label, type, placeholder]) => (
+            <label key={key} className="space-y-2 text-sm text-muted dark:text-darkMuted">
+              <span>{label}</span>
+              <input
+                type={type}
+                value={String(emailForm[key])}
+                placeholder={placeholder}
+                onChange={(event) =>
+                  setEmailForm((current) => ({
+                    ...current,
+                    [key]: type === 'number' ? Number(event.target.value) : event.target.value,
+                  }))
+                }
+                className="h-11 w-full rounded-xl border border-border bg-cream px-3 text-brown outline-none dark:border-darkBorder dark:bg-darkCard dark:text-darkText"
+              />
+            </label>
+          ))}
+          <label className="space-y-2 text-sm text-muted dark:text-darkMuted md:col-span-2">
+            <span>App Password</span>
+            <input
+              type="password"
+              value={emailForm.appPassword}
+              placeholder="Enter Gmail App Password (16-character key)"
+              autoComplete="new-password"
+              onChange={(event) =>
+                setEmailForm((current) => ({
+                  ...current,
+                  appPassword: event.target.value,
+                }))
+              }
+              className="h-11 w-full rounded-xl border border-border bg-cream px-3 text-brown outline-none dark:border-darkBorder dark:bg-darkCard dark:text-darkText"
+            />
+            <p className="text-xs text-muted dark:text-darkMuted">
+              Leave blank to keep the existing password. Generate one at myaccount.google.com → Security → App Passwords.
+            </p>
+          </label>
+        </div>
+        {emailMessage ? (
+          <div className="rounded-xl border border-border bg-cream px-4 py-3 text-sm text-brown dark:border-darkBorder dark:bg-darkBg dark:text-darkText">
+            {emailMessage}
+          </div>
+        ) : null}
+      </section>
     </div>
   );
 }

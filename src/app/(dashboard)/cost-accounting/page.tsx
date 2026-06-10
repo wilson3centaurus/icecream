@@ -9,6 +9,7 @@ import {
   TrendingUp,
   Zap
 } from 'lucide-react';
+import { useTheme } from 'next-themes';
 import { PageHeader } from '@/components/dashboard/page-header';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
@@ -45,6 +46,15 @@ const weeklyTrend = [
 ];
 
 export default function CostAccountingPage() {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === 'dark';
+  const axisColor = isDark ? 'rgba(255,255,255,0.3)' : 'rgba(59,31,18,0.5)';
+  const gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(59,31,18,0.08)';
+  const budgetBarFill = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(59,31,18,0.08)';
+  const tooltipStyle = isDark
+    ? { background: '#1a0700', border: '1px solid rgba(249,115,22,0.2)', borderRadius: '12px', color: '#fff' }
+    : { background: '#fff', border: '1px solid #F3D7B6', borderRadius: '12px', color: '#3B1F12' };
+
   return (
     <div className="space-y-8">
       <PageHeader
@@ -61,9 +71,9 @@ export default function CostAccountingPage() {
             <div key={stat.label} className={`rounded-2xl border p-5 ${stat.color}`}>
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-xs font-medium text-white/50">{stat.label}</p>
-                  <p className="mt-1.5 font-display text-2xl font-bold text-white">{stat.value}</p>
-                  <p className={`mt-1 flex items-center gap-1 text-xs ${stat.up === true ? 'text-emerald-400' : stat.up === false ? 'text-red-400' : 'text-white/40'}`}>
+                  <p className="text-xs font-medium text-muted dark:text-white/50">{stat.label}</p>
+                  <p className="mt-1.5 font-display text-2xl font-bold text-brown dark:text-white">{stat.value}</p>
+                  <p className={`mt-1 flex items-center gap-1 text-xs ${stat.up === true ? 'text-emerald-400' : stat.up === false ? 'text-red-400' : 'text-muted dark:text-white/40'}`}>
                     {stat.up === true && <TrendingDown className="h-3 w-3" />}
                     {stat.up === false && <TrendingUp className="h-3 w-3" />}
                     {stat.change}
@@ -80,59 +90,59 @@ export default function CostAccountingPage() {
 
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Cost per cone trend */}
-        <div className="rounded-2xl border border-white/8 bg-white/5 p-5">
+        <div className="rounded-2xl border border-border bg-white p-5 dark:border-white/8 dark:bg-white/5">
           <div className="mb-4 flex items-center gap-2">
             <BarChart3 className="h-5 w-5 text-orange" />
-            <h3 className="font-display font-semibold text-white">Cost Per Cone — 7 Day Trend</h3>
+            <h3 className="font-display font-semibold text-brown dark:text-white">Cost Per Cone — 7 Day Trend</h3>
           </div>
           <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={weeklyTrend} barGap={4}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
-                <XAxis dataKey="day" stroke="rgba(255,255,255,0.3)" fontSize={11} />
-                <YAxis stroke="rgba(255,255,255,0.3)" fontSize={11} tickFormatter={(v) => `$${v}`} />
+                <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
+                <XAxis dataKey="day" stroke={axisColor} fontSize={11} />
+                <YAxis stroke={axisColor} fontSize={11} tickFormatter={(v) => `$${v}`} />
                 <Tooltip
-                  contentStyle={{ background: '#1a0700', border: '1px solid rgba(249,115,22,0.2)', borderRadius: '12px', color: '#fff' }}
+                  contentStyle={tooltipStyle}
                   // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   formatter={((v: number) => [`$${v}`, '']) as any}
                 />
-                <Bar dataKey="budget" fill="rgba(255,255,255,0.06)" radius={[4, 4, 0, 0]} name="Budget" />
+                <Bar dataKey="budget" fill={budgetBarFill} radius={[4, 4, 0, 0]} name="Budget" />
                 <Bar dataKey="cost" fill="#f97316" radius={[4, 4, 0, 0]} name="Actual" />
               </BarChart>
             </ResponsiveContainer>
           </div>
-          <div className="mt-3 flex items-center gap-4 text-xs text-white/40">
+          <div className="mt-3 flex items-center gap-4 text-xs text-muted dark:text-white/40">
             <span className="flex items-center gap-1.5"><span className="h-2 w-4 rounded bg-orange" />Actual</span>
-            <span className="flex items-center gap-1.5"><span className="h-2 w-4 rounded bg-white/10" />Budget ($0.48)</span>
+            <span className="flex items-center gap-1.5"><span className="h-2 w-4 rounded bg-gray-300 dark:bg-white/10" />Budget ($0.48)</span>
           </div>
         </div>
 
         {/* Cost breakdown */}
-        <div className="rounded-2xl border border-white/8 bg-white/5 p-5">
-          <h3 className="mb-4 font-display font-semibold text-white">Cost Breakdown Per Cone</h3>
+        <div className="rounded-2xl border border-border bg-white p-5 dark:border-white/8 dark:bg-white/5">
+          <h3 className="mb-4 font-display font-semibold text-brown dark:text-white">Cost Breakdown Per Cone</h3>
           <div className="space-y-4">
             {costBreakdown.map((item) => (
               <div key={item.category}>
                 <div className="mb-1.5 flex justify-between text-sm">
-                  <span className="text-white/70">{item.category}</span>
+                  <span className="text-muted dark:text-white/70">{item.category}</span>
                   <div className="flex items-center gap-3">
-                    <span className="text-white/40">std: ${item.standard.toFixed(3)}</span>
+                    <span className="text-muted dark:text-white/40">std: ${item.standard.toFixed(3)}</span>
                     <span className={`font-semibold ${item.actual > item.standard ? 'text-red-400' : 'text-emerald-400'}`}>
                       act: ${item.actual.toFixed(3)}
                     </span>
                   </div>
                 </div>
-                <div className="relative h-2 overflow-hidden rounded-full bg-white/10">
+                <div className="relative h-2 overflow-hidden rounded-full bg-gray-200 dark:bg-white/10">
                   <div className="h-full rounded-full opacity-30" style={{ width: `${(item.standard / 0.48) * 100}%`, backgroundColor: item.color }} />
                   <div className="absolute top-0 h-full rounded-full" style={{ width: `${(item.actual / 0.48) * 100}%`, backgroundColor: item.color }} />
                 </div>
               </div>
             ))}
           </div>
-          <div className="mt-5 flex items-center justify-between border-t border-white/8 pt-4">
-            <span className="text-sm text-white/50">Total per cone</span>
+          <div className="mt-5 flex items-center justify-between border-t border-border pt-4 dark:border-white/8">
+            <span className="text-sm text-muted dark:text-white/50">Total per cone</span>
             <div className="flex items-center gap-3">
-              <span className="text-sm text-white/40">std: $0.469</span>
+              <span className="text-sm text-muted dark:text-white/40">std: $0.469</span>
               <span className="font-display font-bold text-orange">act: $0.470</span>
             </div>
           </div>
@@ -140,15 +150,15 @@ export default function CostAccountingPage() {
       </div>
 
       {/* Batch cost table */}
-      <div className="rounded-2xl border border-white/8 bg-white/5">
-        <div className="flex items-center justify-between border-b border-white/8 px-5 py-4">
-          <h3 className="font-display font-semibold text-white">Batch Cost Analysis</h3>
-          <span className="text-xs text-white/40">Last 5 batches</span>
+      <div className="rounded-2xl border border-border bg-white dark:border-white/8 dark:bg-white/5">
+        <div className="flex items-center justify-between border-b border-border px-5 py-4 dark:border-white/8">
+          <h3 className="font-display font-semibold text-brown dark:text-white">Batch Cost Analysis</h3>
+          <span className="text-xs text-muted dark:text-white/40">Last 5 batches</span>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-white/5 text-left text-xs text-white/30">
+              <tr className="border-b border-border text-left text-xs text-muted dark:border-white/5 dark:text-white/30">
                 <th className="px-5 py-3 font-medium">Batch</th>
                 <th className="px-5 py-3 font-medium">Product</th>
                 <th className="px-5 py-3 font-medium text-right">Output</th>
@@ -157,14 +167,14 @@ export default function CostAccountingPage() {
                 <th className="px-5 py-3 font-medium text-right">Variance</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-border dark:divide-white/5">
               {batchCosts.map((row) => (
-                <tr key={row.batch} className="transition hover:bg-white/5">
-                  <td className="px-5 py-4 font-semibold text-white">{row.batch}</td>
-                  <td className="px-5 py-4 text-white/60">{row.product}</td>
-                  <td className="px-5 py-4 text-right text-white">{row.output.toLocaleString()}</td>
-                  <td className="px-5 py-4 text-right text-white">${row.costPerUnit.toFixed(2)}</td>
-                  <td className="px-5 py-4 text-right text-white">${row.total}</td>
+                <tr key={row.batch} className="transition hover:bg-gray-50 dark:hover:bg-white/5">
+                  <td className="px-5 py-4 font-semibold text-brown dark:text-white">{row.batch}</td>
+                  <td className="px-5 py-4 text-muted dark:text-white/60">{row.product}</td>
+                  <td className="px-5 py-4 text-right text-brown dark:text-white">{row.output.toLocaleString()}</td>
+                  <td className="px-5 py-4 text-right text-brown dark:text-white">${row.costPerUnit.toFixed(2)}</td>
+                  <td className="px-5 py-4 text-right text-brown dark:text-white">${row.total}</td>
                   <td className="px-5 py-4 text-right">
                     <span className={`flex items-center justify-end gap-1 font-semibold ${row.variance < 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                       {row.variance < 0 ? <TrendingDown className="h-3.5 w-3.5" /> : <TrendingUp className="h-3.5 w-3.5" />}
@@ -183,8 +193,8 @@ export default function CostAccountingPage() {
         <div className="flex items-start gap-4 rounded-2xl border border-amber-500/20 bg-amber-500/10 p-5">
           <AlertTriangle className="mt-0.5 h-5 w-5 flex-shrink-0 text-amber-400" />
           <div>
-            <p className="font-semibold text-amber-300">Material Variance Detected</p>
-            <p className="mt-1 text-sm text-amber-400/70">
+            <p className="font-semibold text-amber-700 dark:text-amber-300">Material Variance Detected</p>
+            <p className="mt-1 text-sm text-amber-600/80 dark:text-amber-400/70">
               2 batches exceeded standard material cost. Review raw material consumption records for BATCH-040 (Choc Cone) and BATCH-038 (Mint Cone). Consider investigating wastage or measurement issues.
             </p>
           </div>

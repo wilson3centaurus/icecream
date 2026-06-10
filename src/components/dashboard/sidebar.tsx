@@ -164,19 +164,18 @@ export function Sidebar() {
           </div>
         </div>
 
-        {/* User card */}
-        <div className="mt-4 rounded-xl border border-white/10 bg-white/7 px-3 py-3">
-          <p className="text-[10px] uppercase tracking-[0.2em] text-white/50">Signed in as</p>
-          <p className="mt-1.5 truncate text-sm font-semibold text-white">
-            {currentUser?.profile?.fullName ?? 'ERP User'}
-          </p>
-          <div className="mt-1.5 flex items-center gap-1.5">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-            <p className="truncate text-[10px] text-white/60">
-              {currentUser?.roles?.map((role) => role.name).join(' | ') || 'No role assigned'}
-            </p>
+        {currentUser && (
+          <div className="mt-3 flex items-center gap-2.5 rounded-xl bg-white/5 px-3 py-2.5">
+            <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-orange/20 text-sm font-bold text-orange">
+              {currentUser.profile.firstName?.[0]?.toUpperCase() ?? '?'}
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-xs font-semibold text-white">{currentUser.profile.fullName}</p>
+              <p className="truncate text-[10px] capitalize text-white/50">{currentUser.profile.role}</p>
+            </div>
+            <span className="flex h-2 w-2 flex-shrink-0 rounded-full bg-emerald-400" />
           </div>
-        </div>
+        )}
       </div>
 
       {/* Navigation */}

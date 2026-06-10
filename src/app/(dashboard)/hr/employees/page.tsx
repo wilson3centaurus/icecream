@@ -19,7 +19,7 @@ const employees = [
 const statusColors: Record<string, string> = {
   ACTIVE: 'bg-emerald-500/15 text-emerald-400',
   ON_LEAVE: 'bg-amber-500/15 text-amber-400',
-  RESIGNED: 'bg-white/8 text-white/30',
+  RESIGNED: 'bg-gray-100 text-muted dark:bg-white/8 dark:text-white/30',
   TERMINATED: 'bg-red-500/15 text-red-400',
 };
 
@@ -41,7 +41,7 @@ export default function EmployeesPage() {
         description="Manage employee records, departments, roles and employment status."
         actions={
           <div className="flex items-center gap-3">
-            <Link href="/hr" className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white/60 transition hover:bg-white/10">
+            <Link href="/hr" className="inline-flex items-center gap-2 rounded-xl border border-border bg-white px-3 py-2.5 text-sm text-muted transition hover:bg-gray-50 dark:border-white/10 dark:bg-white/5 dark:text-white/60 dark:hover:bg-white/10">
               <ArrowLeft className="h-4 w-4" />
               Back
             </Link>
@@ -56,49 +56,49 @@ export default function EmployeesPage() {
       {/* Summary */}
       <div className="grid grid-cols-4 gap-4">
         {[
-          { label: 'Total Staff', value: '54', color: 'text-white' },
+          { label: 'Total Staff', value: '54', color: 'text-brown dark:text-white' },
           { label: 'Active', value: '51', color: 'text-emerald-400' },
           { label: 'On Leave', value: '2', color: 'text-amber-400' },
           { label: 'New This Month', value: '1', color: 'text-orange' },
         ].map((s) => (
-          <div key={s.label} className="rounded-2xl border border-white/8 bg-white/3 p-4">
-            <p className="text-xs text-white/40">{s.label}</p>
+          <div key={s.label} className="rounded-2xl border border-border bg-white p-4 dark:border-white/8 dark:bg-white/5">
+            <p className="text-xs text-muted dark:text-white/40">{s.label}</p>
             <p className={`mt-1.5 text-2xl font-bold ${s.color}`}>{s.value}</p>
           </div>
         ))}
       </div>
 
       {/* Table */}
-      <div className="overflow-hidden rounded-2xl border border-white/8 bg-white/3">
+      <div className="overflow-hidden rounded-2xl border border-border bg-white dark:border-white/8 dark:bg-white/5">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-white/8">
-              <th className="px-5 py-3.5 text-left text-xs font-medium text-white/40">ID</th>
-              <th className="px-5 py-3.5 text-left text-xs font-medium text-white/40">Name</th>
-              <th className="px-5 py-3.5 text-left text-xs font-medium text-white/40">Department</th>
-              <th className="px-5 py-3.5 text-left text-xs font-medium text-white/40">Role</th>
-              <th className="px-5 py-3.5 text-left text-xs font-medium text-white/40">Shift</th>
-              <th className="px-5 py-3.5 text-left text-xs font-medium text-white/40">Status</th>
-              <th className="px-5 py-3.5 text-left text-xs font-medium text-white/40">Hired</th>
+            <tr className="border-b border-border dark:border-white/8">
+              <th className="px-5 py-3.5 text-left text-xs font-medium text-muted dark:text-white/40">ID</th>
+              <th className="px-5 py-3.5 text-left text-xs font-medium text-muted dark:text-white/40">Name</th>
+              <th className="px-5 py-3.5 text-left text-xs font-medium text-muted dark:text-white/40">Department</th>
+              <th className="px-5 py-3.5 text-left text-xs font-medium text-muted dark:text-white/40">Role</th>
+              <th className="px-5 py-3.5 text-left text-xs font-medium text-muted dark:text-white/40">Shift</th>
+              <th className="px-5 py-3.5 text-left text-xs font-medium text-muted dark:text-white/40">Status</th>
+              <th className="px-5 py-3.5 text-left text-xs font-medium text-muted dark:text-white/40">Hired</th>
               <th className="px-5 py-3.5" />
             </tr>
           </thead>
           <tbody>
             {employees.map((emp) => (
-              <tr key={emp.id} className="border-b border-white/5 transition hover:bg-white/4 last:border-0">
-                <td className="px-5 py-3.5 font-mono text-xs text-white/40">{emp.id}</td>
-                <td className="px-5 py-3.5 font-medium text-white">{emp.name}</td>
+              <tr key={emp.id} className="border-b border-border transition hover:bg-gray-50 last:border-0 dark:border-white/5 dark:hover:bg-white/4">
+                <td className="px-5 py-3.5 font-mono text-xs text-muted dark:text-white/40">{emp.id}</td>
+                <td className="px-5 py-3.5 font-medium text-brown dark:text-white">{emp.name}</td>
                 <td className="px-5 py-3.5">
-                  <span className={`text-xs font-medium ${deptColors[emp.dept] ?? 'text-white/60'}`}>{emp.dept}</span>
+                  <span className={`text-xs font-medium ${deptColors[emp.dept] ?? 'text-muted dark:text-white/60'}`}>{emp.dept}</span>
                 </td>
-                <td className="px-5 py-3.5 text-white/60">{emp.role}</td>
-                <td className="px-5 py-3.5 text-white/40 text-xs">{emp.shift}</td>
+                <td className="px-5 py-3.5 text-muted dark:text-white/60">{emp.role}</td>
+                <td className="px-5 py-3.5 text-xs text-muted dark:text-white/40">{emp.shift}</td>
                 <td className="px-5 py-3.5">
                   <span className={`rounded-full px-2.5 py-1 text-[10px] font-semibold ${statusColors[emp.status]}`}>{emp.status.replace('_', ' ')}</span>
                 </td>
-                <td className="px-5 py-3.5 text-white/40 text-xs">{emp.hired}</td>
+                <td className="px-5 py-3.5 text-xs text-muted dark:text-white/40">{emp.hired}</td>
                 <td className="px-5 py-3.5 text-right">
-                  <button aria-label="View employee" className="rounded-lg p-1.5 text-white/30 transition hover:bg-white/8 hover:text-white">
+                  <button aria-label="View employee" className="rounded-lg p-1.5 text-muted/70 transition hover:bg-gray-100 hover:text-brown dark:text-white/30 dark:hover:bg-white/8 dark:hover:text-white">
                     <Eye className="h-4 w-4" />
                   </button>
                 </td>

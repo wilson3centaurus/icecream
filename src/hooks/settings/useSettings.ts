@@ -243,6 +243,38 @@ export function useDeleteUser() {
   });
 }
 
+export interface EmailConfigData {
+  fromEmail: string;
+  fromName: string;
+  smtpHost: string;
+  smtpPort: number;
+  appPassword: string;
+}
+
+export function useEmailConfig() {
+  const { isLoaded, isSignedIn, userId } = useAppAuth();
+
+  return useQuery({
+    queryKey: ['settings', 'email-config', userId],
+    queryFn: () => apiFetch<EmailConfigData>('/api/settings/email-config'),
+    enabled: isLoaded && Boolean(isSignedIn),
+  });
+}
+
+export function useUpdateEmailConfig() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (body: Partial<EmailConfigData>) =>
+      apiFetch<EmailConfigData>('/api/settings/email-config', {
+        method: 'PATCH',
+        body: JSON.stringify(body),
+      }),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['settings', 'email-config'] });
+    },
+  });
+}
+
 export function useCreateRole() {
   return useSettingsMutation('/api/settings/roles', 'POST');
 }

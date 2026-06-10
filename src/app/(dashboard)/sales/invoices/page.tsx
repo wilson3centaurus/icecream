@@ -19,7 +19,7 @@ const statusColors: Record<string, string> = {
   PAID: 'bg-emerald-500/15 text-emerald-400',
   OVERDUE: 'bg-red-500/15 text-red-400',
   PARTIAL: 'bg-amber-500/15 text-amber-400',
-  VOID: 'bg-white/8 text-white/30',
+  VOID: 'bg-gray-100 text-muted dark:bg-white/8 dark:text-white/30',
 };
 
 export default function InvoicesPage() {
@@ -30,11 +30,11 @@ export default function InvoicesPage() {
         description="Track billing, payment collection and overdue accounts."
         actions={
           <div className="flex items-center gap-3">
-            <Link href="/sales" className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white/60 transition hover:bg-white/10">
+            <Link href="/sales" className="inline-flex items-center gap-2 rounded-xl border border-border bg-white px-3 py-2.5 text-sm text-muted transition hover:bg-gray-50 dark:border-white/10 dark:bg-white/5 dark:text-white/60 dark:hover:bg-white/10">
               <ArrowLeft className="h-4 w-4" />
               Back
             </Link>
-            <button className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white/60 transition hover:bg-white/10">
+            <button className="inline-flex items-center gap-2 rounded-xl border border-border bg-white px-3 py-2.5 text-sm text-muted transition hover:bg-gray-50 dark:border-white/10 dark:bg-white/5 dark:text-white/60 dark:hover:bg-white/10">
               <Download className="h-4 w-4" />
               Export
             </button>
@@ -45,49 +45,49 @@ export default function InvoicesPage() {
       {/* Summary cards */}
       <div className="grid grid-cols-3 gap-4">
         {[
-          { label: 'Total Outstanding', value: '$4,480.00', color: 'text-orange', bg: 'bg-orange/8 border-orange/20' },
-          { label: 'Overdue (2)', value: '$3,520.00', color: 'text-red-400', bg: 'bg-red-500/8 border-red-500/20' },
-          { label: 'Collected This Month', value: '$4,370.00', color: 'text-emerald-400', bg: 'bg-emerald-500/8 border-emerald-500/20' },
+          { label: 'Total Outstanding', value: '$4,480.00', color: 'text-orange', bg: 'border-orange/20 bg-orange/8' },
+          { label: 'Overdue (2)', value: '$3,520.00', color: 'text-red-400', bg: 'border-red-500/20 bg-red-500/8' },
+          { label: 'Collected This Month', value: '$4,370.00', color: 'text-emerald-400', bg: 'border-emerald-500/20 bg-emerald-500/8' },
         ].map((c) => (
           <div key={c.label} className={`rounded-2xl border p-4 ${c.bg}`}>
-            <p className="text-xs text-white/40">{c.label}</p>
+            <p className="text-xs text-muted dark:text-white/40">{c.label}</p>
             <p className={`mt-1.5 text-xl font-bold ${c.color}`}>{c.value}</p>
           </div>
         ))}
       </div>
 
       {/* Table */}
-      <div className="overflow-hidden rounded-2xl border border-white/8 bg-white/3">
+      <div className="overflow-hidden rounded-2xl border border-border bg-white dark:border-white/8 dark:bg-white/5">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-white/8">
-              <th className="px-5 py-3.5 text-left text-xs font-medium text-white/40">Invoice</th>
-              <th className="px-5 py-3.5 text-left text-xs font-medium text-white/40">Customer</th>
-              <th className="px-5 py-3.5 text-right text-xs font-medium text-white/40">Amount</th>
-              <th className="px-5 py-3.5 text-right text-xs font-medium text-white/40">Paid</th>
-              <th className="px-5 py-3.5 text-left text-xs font-medium text-white/40">Due Date</th>
-              <th className="px-5 py-3.5 text-left text-xs font-medium text-white/40">Status</th>
+            <tr className="border-b border-border dark:border-white/8">
+              <th className="px-5 py-3.5 text-left text-xs font-medium text-muted dark:text-white/40">Invoice</th>
+              <th className="px-5 py-3.5 text-left text-xs font-medium text-muted dark:text-white/40">Customer</th>
+              <th className="px-5 py-3.5 text-right text-xs font-medium text-muted dark:text-white/40">Amount</th>
+              <th className="px-5 py-3.5 text-right text-xs font-medium text-muted dark:text-white/40">Paid</th>
+              <th className="px-5 py-3.5 text-left text-xs font-medium text-muted dark:text-white/40">Due Date</th>
+              <th className="px-5 py-3.5 text-left text-xs font-medium text-muted dark:text-white/40">Status</th>
               <th className="px-5 py-3.5" />
             </tr>
           </thead>
           <tbody>
             {invoices.map((inv) => (
-              <tr key={inv.id} className="border-b border-white/5 transition hover:bg-white/4 last:border-0">
+              <tr key={inv.id} className="border-b border-border transition hover:bg-gray-50 last:border-0 dark:border-white/5 dark:hover:bg-white/4">
                 <td className="px-5 py-3.5">
                   <p className="font-mono text-xs font-medium text-orange">{inv.id}</p>
-                  <p className="text-[11px] text-white/30">{inv.order}</p>
+                  <p className="text-[11px] text-muted/70 dark:text-white/30">{inv.order}</p>
                 </td>
-                <td className="px-5 py-3.5 font-medium text-white">{inv.customer}</td>
-                <td className="px-5 py-3.5 text-right font-semibold text-white">{inv.amount}</td>
-                <td className="px-5 py-3.5 text-right text-white/60">{inv.paid}</td>
-                <td className={`px-5 py-3.5 text-xs ${inv.status === 'OVERDUE' ? 'text-red-400 font-medium' : 'text-white/40'}`}>{inv.due}</td>
+                <td className="px-5 py-3.5 font-medium text-brown dark:text-white">{inv.customer}</td>
+                <td className="px-5 py-3.5 text-right font-semibold text-brown dark:text-white">{inv.amount}</td>
+                <td className="px-5 py-3.5 text-right text-muted dark:text-white/60">{inv.paid}</td>
+                <td className={`px-5 py-3.5 text-xs ${inv.status === 'OVERDUE' ? 'font-medium text-red-400' : 'text-muted dark:text-white/40'}`}>{inv.due}</td>
                 <td className="px-5 py-3.5">
                   <span className={`rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide ${statusColors[inv.status]}`}>
                     {inv.status}
                   </span>
                 </td>
                 <td className="px-5 py-3.5 text-right">
-                  <button aria-label="View invoice" className="rounded-lg p-1.5 text-white/30 transition hover:bg-white/8 hover:text-white">
+                  <button aria-label="View invoice" className="rounded-lg p-1.5 text-muted/70 transition hover:bg-gray-100 hover:text-brown dark:text-white/30 dark:hover:bg-white/8 dark:hover:text-white">
                     <Eye className="h-4 w-4" />
                   </button>
                 </td>

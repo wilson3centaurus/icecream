@@ -15,7 +15,7 @@ const orders = [
 ];
 
 const statusColors: Record<string, string> = {
-  DRAFT: 'bg-white/8 text-white/40',
+  DRAFT: 'bg-gray-100 text-muted dark:bg-white/8 dark:text-white/40',
   CONFIRMED: 'bg-blue-500/15 text-blue-400',
   PICKING: 'bg-amber-500/15 text-amber-400',
   DELIVERED: 'bg-emerald-500/15 text-emerald-400',
@@ -32,7 +32,7 @@ export default function SalesOrdersPage() {
         description="Create, track and manage all customer orders across branches."
         actions={
           <div className="flex items-center gap-3">
-            <Link href="/sales" className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white/60 transition hover:bg-white/10">
+            <Link href="/sales" className="inline-flex items-center gap-2 rounded-xl border border-border bg-white px-3 py-2.5 text-sm text-muted transition hover:bg-gray-50 dark:border-white/10 dark:bg-white/5 dark:text-white/60 dark:hover:bg-white/10">
               <ArrowLeft className="h-4 w-4" />
               Back
             </Link>
@@ -45,45 +45,45 @@ export default function SalesOrdersPage() {
       />
 
       {/* Filter bar */}
-      <div className="flex items-center gap-3 flex-wrap">
+      <div className="flex flex-wrap items-center gap-3">
         {['All', 'CONFIRMED', 'PICKING', 'DELIVERED', 'INVOICED', 'PAID'].map((f) => (
-          <button key={f} className={`rounded-xl px-3 py-1.5 text-xs font-medium transition ${f === 'All' ? 'bg-orange text-white' : 'border border-white/8 bg-white/5 text-white/50 hover:bg-white/10 hover:text-white'}`}>
+          <button key={f} className={`rounded-xl px-3 py-1.5 text-xs font-medium transition ${f === 'All' ? 'bg-orange text-white' : 'border border-border bg-white text-muted hover:bg-gray-50 hover:text-brown dark:border-white/8 dark:bg-white/5 dark:text-white/50 dark:hover:bg-white/10 dark:hover:text-white'}`}>
             {f}
           </button>
         ))}
       </div>
 
       {/* Table */}
-      <div className="overflow-hidden rounded-2xl border border-white/8 bg-white/3">
+      <div className="overflow-hidden rounded-2xl border border-border bg-white dark:border-white/8 dark:bg-white/5">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-white/8">
-              <th className="px-5 py-3.5 text-left text-xs font-medium text-white/40">Order #</th>
-              <th className="px-5 py-3.5 text-left text-xs font-medium text-white/40">Customer</th>
-              <th className="px-5 py-3.5 text-left text-xs font-medium text-white/40">Branch</th>
-              <th className="px-5 py-3.5 text-right text-xs font-medium text-white/40">Items</th>
-              <th className="px-5 py-3.5 text-right text-xs font-medium text-white/40">Total</th>
-              <th className="px-5 py-3.5 text-left text-xs font-medium text-white/40">Status</th>
-              <th className="px-5 py-3.5 text-left text-xs font-medium text-white/40">Date</th>
+            <tr className="border-b border-border dark:border-white/8">
+              <th className="px-5 py-3.5 text-left text-xs font-medium text-muted dark:text-white/40">Order #</th>
+              <th className="px-5 py-3.5 text-left text-xs font-medium text-muted dark:text-white/40">Customer</th>
+              <th className="px-5 py-3.5 text-left text-xs font-medium text-muted dark:text-white/40">Branch</th>
+              <th className="px-5 py-3.5 text-right text-xs font-medium text-muted dark:text-white/40">Items</th>
+              <th className="px-5 py-3.5 text-right text-xs font-medium text-muted dark:text-white/40">Total</th>
+              <th className="px-5 py-3.5 text-left text-xs font-medium text-muted dark:text-white/40">Status</th>
+              <th className="px-5 py-3.5 text-left text-xs font-medium text-muted dark:text-white/40">Date</th>
               <th className="px-5 py-3.5" />
             </tr>
           </thead>
           <tbody>
             {orders.map((order) => (
-              <tr key={order.id} className="border-b border-white/5 transition hover:bg-white/4 last:border-0">
+              <tr key={order.id} className="border-b border-border transition hover:bg-gray-50 last:border-0 dark:border-white/5 dark:hover:bg-white/4">
                 <td className="px-5 py-3.5 font-mono text-xs text-orange">{order.id}</td>
-                <td className="px-5 py-3.5 font-medium text-white">{order.customer}</td>
-                <td className="px-5 py-3.5 text-white/50">{order.branch}</td>
-                <td className="px-5 py-3.5 text-right text-white/70">{order.items}</td>
-                <td className="px-5 py-3.5 text-right font-semibold text-white">{order.total}</td>
+                <td className="px-5 py-3.5 font-medium text-brown dark:text-white">{order.customer}</td>
+                <td className="px-5 py-3.5 text-muted dark:text-white/50">{order.branch}</td>
+                <td className="px-5 py-3.5 text-right text-brown dark:text-white/70">{order.items}</td>
+                <td className="px-5 py-3.5 text-right font-semibold text-brown dark:text-white">{order.total}</td>
                 <td className="px-5 py-3.5">
                   <span className={`rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide ${statusColors[order.status]}`}>
                     {order.status}
                   </span>
                 </td>
-                <td className="px-5 py-3.5 text-white/40 text-xs">{order.date}</td>
+                <td className="px-5 py-3.5 text-xs text-muted dark:text-white/40">{order.date}</td>
                 <td className="px-5 py-3.5 text-right">
-                  <button className="rounded-lg p-1.5 text-white/30 transition hover:bg-white/8 hover:text-white">
+                  <button className="rounded-lg p-1.5 text-muted/70 transition hover:bg-gray-100 hover:text-brown dark:text-white/30 dark:hover:bg-white/8 dark:hover:text-white">
                     <Eye className="h-4 w-4" />
                   </button>
                 </td>

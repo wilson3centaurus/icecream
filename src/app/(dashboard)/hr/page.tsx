@@ -68,9 +68,9 @@ export default function HRPage() {
             <div key={stat.label} className={`rounded-2xl border p-5 ${stat.color}`}>
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-xs font-medium text-white/50">{stat.label}</p>
-                  <p className="mt-1.5 font-display text-2xl font-bold text-white">{stat.value}</p>
-                  <p className="mt-1 text-xs text-white/40">{stat.change}</p>
+                  <p className="text-xs font-medium text-muted dark:text-white/50">{stat.label}</p>
+                  <p className="mt-1.5 font-display text-2xl font-bold text-brown dark:text-white">{stat.value}</p>
+                  <p className="mt-1 text-xs text-muted dark:text-white/40">{stat.change}</p>
                 </div>
                 <div className="rounded-xl border border-current/20 bg-current/10 p-2">
                   <Icon className="h-5 w-5" />
@@ -89,35 +89,35 @@ export default function HRPage() {
             <Link
               key={link.href}
               href={link.href}
-              className="group flex items-center justify-between rounded-2xl border border-white/8 bg-white/5 p-5 transition-all hover:border-indigo-500/30 hover:bg-white/10"
+              className="group flex items-center justify-between rounded-2xl border border-border bg-white p-5 transition-all hover:border-indigo-500/30 hover:bg-gray-50 dark:border-white/8 dark:bg-white/5 dark:hover:bg-white/10"
             >
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-500/15 text-indigo-400">
                   <Icon className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="font-semibold text-white">{link.label}</p>
-                  <p className="text-xs text-white/40">{link.desc}</p>
+                  <p className="font-semibold text-brown dark:text-white">{link.label}</p>
+                  <p className="text-xs text-muted dark:text-white/40">{link.desc}</p>
                 </div>
               </div>
-              <ArrowRight className="h-4 w-4 text-white/30 transition-transform group-hover:translate-x-1 group-hover:text-indigo-400" />
+              <ArrowRight className="h-4 w-4 text-muted/70 transition-transform group-hover:translate-x-1 group-hover:text-indigo-400 dark:text-white/30" />
             </Link>
           );
         })}
       </div>
 
       {/* Departments */}
-      <div className="rounded-2xl border border-white/8 bg-white/5 p-5">
-        <h3 className="mb-4 font-display font-semibold text-white">Headcount by Department</h3>
+      <div className="rounded-2xl border border-border bg-white p-5 dark:border-white/8 dark:bg-white/5">
+        <h3 className="mb-4 font-display font-semibold text-brown dark:text-white">Headcount by Department</h3>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {departments.map((dept) => (
-            <div key={dept.name} className="flex items-center gap-3 rounded-xl border border-white/8 bg-white/5 px-4 py-3">
+            <div key={dept.name} className="flex items-center gap-3 rounded-xl border border-border bg-cream px-4 py-3 dark:border-white/8 dark:bg-white/5">
               <div className={`h-10 w-1 flex-shrink-0 rounded-full ${dept.color}`} />
               <div className="flex-1 min-w-0">
-                <p className="font-semibold text-white text-sm truncate">{dept.name}</p>
-                <p className="text-xs text-white/40">{dept.shift}</p>
+                <p className="font-semibold text-brown text-sm truncate dark:text-white">{dept.name}</p>
+                <p className="text-xs text-muted dark:text-white/40">{dept.shift}</p>
               </div>
-              <span className="font-display text-lg font-bold text-white">{dept.headcount}</span>
+              <span className="font-display text-lg font-bold text-brown dark:text-white">{dept.headcount}</span>
             </div>
           ))}
         </div>
@@ -125,45 +125,45 @@ export default function HRPage() {
 
       {/* Shift breakdown */}
       <div className="grid gap-4 sm:grid-cols-2">
-        <div className="rounded-2xl border border-white/8 bg-white/5 p-5">
+        <div className="rounded-2xl border border-border bg-white p-5 dark:border-white/8 dark:bg-white/5">
           <div className="mb-3 flex items-center gap-2">
             <div className="h-2.5 w-2.5 rounded-full bg-orange" />
-            <h4 className="font-semibold text-white">Day Shift</h4>
+            <h4 className="font-semibold text-brown dark:text-white">Day Shift</h4>
           </div>
-          <p className="font-display text-3xl font-bold text-white">26</p>
-          <p className="mt-1 text-xs text-white/40">employees assigned · 06:00 – 18:00</p>
-          <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/10">
+          <p className="font-display text-3xl font-bold text-brown dark:text-white">26</p>
+          <p className="mt-1 text-xs text-muted dark:text-white/40">employees assigned · 06:00 – 18:00</p>
+          <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-gray-200 dark:bg-white/10">
             <div className="h-full w-[54%] rounded-full bg-orange" />
           </div>
         </div>
-        <div className="rounded-2xl border border-white/8 bg-white/5 p-5">
+        <div className="rounded-2xl border border-border bg-white p-5 dark:border-white/8 dark:bg-white/5">
           <div className="mb-3 flex items-center gap-2">
             <div className="h-2.5 w-2.5 rounded-full bg-indigo-400" />
-            <h4 className="font-semibold text-white">Night Shift</h4>
+            <h4 className="font-semibold text-brown dark:text-white">Night Shift</h4>
           </div>
-          <p className="font-display text-3xl font-bold text-white">17</p>
-          <p className="mt-1 text-xs text-white/40">employees assigned · 18:00 – 06:00</p>
-          <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/10">
+          <p className="font-display text-3xl font-bold text-brown dark:text-white">17</p>
+          <p className="mt-1 text-xs text-muted dark:text-white/40">employees assigned · 18:00 – 06:00</p>
+          <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-gray-200 dark:bg-white/10">
             <div className="h-full w-[35%] rounded-full bg-indigo-400" />
           </div>
         </div>
       </div>
 
       {/* Recent payroll */}
-      <div className="rounded-2xl border border-white/8 bg-white/5">
-        <div className="flex items-center justify-between border-b border-white/8 px-5 py-4">
-          <h3 className="font-display font-semibold text-white">Payroll — Current Period</h3>
+      <div className="rounded-2xl border border-border bg-white dark:border-white/8 dark:bg-white/5">
+        <div className="flex items-center justify-between border-b border-border px-5 py-4 dark:border-white/8">
+          <h3 className="font-display font-semibold text-brown dark:text-white">Payroll — Current Period</h3>
           <div className="flex items-center gap-2">
             <TrendingUp className="h-4 w-4 text-emerald-400" />
             <span className="text-xs text-emerald-400">$28,400 total</span>
           </div>
         </div>
-        <div className="divide-y divide-white/5">
+        <div className="divide-y divide-border dark:divide-white/5">
           {recentPayroll.map((record) => (
-            <div key={record.employee} className="flex items-center justify-between px-5 py-4 transition hover:bg-white/5">
+            <div key={record.employee} className="flex items-center justify-between px-5 py-4 transition hover:bg-gray-50 dark:hover:bg-white/5">
               <div>
-                <p className="font-semibold text-white">{record.employee}</p>
-                <p className="text-xs text-white/40">{record.role}</p>
+                <p className="font-semibold text-brown dark:text-white">{record.employee}</p>
+                <p className="text-xs text-muted dark:text-white/40">{record.role}</p>
               </div>
               <div className="flex items-center gap-4">
                 <span className={`rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
@@ -172,8 +172,8 @@ export default function HRPage() {
                   {record.status}
                 </span>
                 <div className="text-right">
-                  <p className="text-sm font-semibold text-white">{record.net}</p>
-                  <p className="text-xs text-white/30">net · basic {record.basic}</p>
+                  <p className="text-sm font-semibold text-brown dark:text-white">{record.net}</p>
+                  <p className="text-xs text-muted/70 dark:text-white/30">net · basic {record.basic}</p>
                 </div>
               </div>
             </div>

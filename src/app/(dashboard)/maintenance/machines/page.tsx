@@ -27,10 +27,10 @@ function HealthBar({ value }: { value: number }) {
   const color = value >= 80 ? 'bg-emerald-500' : value >= 50 ? 'bg-amber-500' : 'bg-red-500';
   return (
     <div className="flex items-center gap-2">
-      <div className="h-1.5 w-16 overflow-hidden rounded-full bg-white/8">
+      <div className="h-1.5 w-16 overflow-hidden rounded-full bg-gray-200 dark:bg-white/8">
         <div className={`h-full rounded-full transition-all ${color}`} style={{ width: `${value}%` }} />
       </div>
-      <span className="text-xs text-white/50">{value}%</span>
+      <span className="text-xs text-muted dark:text-white/50">{value}%</span>
     </div>
   );
 }
@@ -46,7 +46,7 @@ export default function MachinesPage() {
         description="Track all production equipment, health scores and service schedules."
         actions={
           <div className="flex items-center gap-3">
-            <Link href="/maintenance" className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white/60 transition hover:bg-white/10">
+            <Link href="/maintenance" className="inline-flex items-center gap-2 rounded-xl border border-border bg-white px-3 py-2.5 text-sm text-muted transition hover:bg-gray-50 dark:border-white/10 dark:bg-white/5 dark:text-white/60 dark:hover:bg-white/10">
               <ArrowLeft className="h-4 w-4" />
               Back
             </Link>
@@ -64,13 +64,13 @@ export default function MachinesPage() {
           {breakdowns > 0 && (
             <div className="flex items-start gap-3 rounded-2xl border border-red-500/20 bg-red-500/8 p-4">
               <AlertTriangle className="mt-0.5 h-4 w-4 flex-shrink-0 text-red-400" />
-              <p className="text-sm text-red-300">{breakdowns} machine(s) in breakdown — production capacity is reduced. Log a repair job immediately.</p>
+              <p className="text-sm text-red-700 dark:text-red-300">{breakdowns} machine(s) in breakdown — production capacity is reduced. Log a repair job immediately.</p>
             </div>
           )}
           {dueSoon > 0 && (
             <div className="flex items-start gap-3 rounded-2xl border border-amber-500/20 bg-amber-500/8 p-4">
               <Wrench className="mt-0.5 h-4 w-4 flex-shrink-0 text-amber-400" />
-              <p className="text-sm text-amber-300">{dueSoon} machine(s) due for preventive maintenance. Schedule service before next production run.</p>
+              <p className="text-sm text-amber-700 dark:text-amber-300">{dueSoon} machine(s) due for preventive maintenance. Schedule service before next production run.</p>
             </div>
           )}
         </div>
@@ -79,46 +79,46 @@ export default function MachinesPage() {
       {/* Summary */}
       <div className="grid grid-cols-4 gap-4">
         {[
-          { label: 'Total Machines', value: machines.length, color: 'text-white' },
+          { label: 'Total Machines', value: machines.length, color: 'text-brown dark:text-white' },
           { label: 'Operational', value: machines.filter((m) => m.status === 'OPERATIONAL').length, color: 'text-emerald-400' },
           { label: 'Service Due', value: dueSoon, color: 'text-amber-400' },
           { label: 'Breakdown', value: breakdowns, color: 'text-red-400' },
         ].map((s) => (
-          <div key={s.label} className="rounded-2xl border border-white/8 bg-white/3 p-4">
-            <p className="text-xs text-white/40">{s.label}</p>
+          <div key={s.label} className="rounded-2xl border border-border bg-white p-4 dark:border-white/8 dark:bg-white/5">
+            <p className="text-xs text-muted dark:text-white/40">{s.label}</p>
             <p className={`mt-1.5 text-2xl font-bold ${s.color}`}>{s.value}</p>
           </div>
         ))}
       </div>
 
       {/* Table */}
-      <div className="overflow-hidden rounded-2xl border border-white/8 bg-white/3">
+      <div className="overflow-hidden rounded-2xl border border-border bg-white dark:border-white/8 dark:bg-white/5">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-white/8">
-              <th className="px-5 py-3.5 text-left text-xs font-medium text-white/40">Machine</th>
-              <th className="px-5 py-3.5 text-left text-xs font-medium text-white/40">Type</th>
-              <th className="px-5 py-3.5 text-left text-xs font-medium text-white/40">Location</th>
-              <th className="px-5 py-3.5 text-left text-xs font-medium text-white/40">Last Service</th>
-              <th className="px-5 py-3.5 text-left text-xs font-medium text-white/40">Next Service</th>
-              <th className="px-5 py-3.5 text-left text-xs font-medium text-white/40">Health</th>
-              <th className="px-5 py-3.5 text-left text-xs font-medium text-white/40">Status</th>
+            <tr className="border-b border-border dark:border-white/8">
+              <th className="px-5 py-3.5 text-left text-xs font-medium text-muted dark:text-white/40">Machine</th>
+              <th className="px-5 py-3.5 text-left text-xs font-medium text-muted dark:text-white/40">Type</th>
+              <th className="px-5 py-3.5 text-left text-xs font-medium text-muted dark:text-white/40">Location</th>
+              <th className="px-5 py-3.5 text-left text-xs font-medium text-muted dark:text-white/40">Last Service</th>
+              <th className="px-5 py-3.5 text-left text-xs font-medium text-muted dark:text-white/40">Next Service</th>
+              <th className="px-5 py-3.5 text-left text-xs font-medium text-muted dark:text-white/40">Health</th>
+              <th className="px-5 py-3.5 text-left text-xs font-medium text-muted dark:text-white/40">Status</th>
               <th className="px-5 py-3.5" />
             </tr>
           </thead>
           <tbody>
             {machines.map((m) => {
-              const cfg = statusConfig[m.status] ?? { label: m.status, color: 'bg-white/8 text-white/40' };
+              const cfg = statusConfig[m.status] ?? { label: m.status, color: 'bg-gray-100 text-muted dark:bg-white/8 dark:text-white/40' };
               return (
-                <tr key={m.id} className="border-b border-white/5 transition hover:bg-white/4 last:border-0">
+                <tr key={m.id} className="border-b border-border transition hover:bg-gray-50 last:border-0 dark:border-white/5 dark:hover:bg-white/4">
                   <td className="px-5 py-3.5">
-                    <p className="font-medium text-white">{m.name}</p>
-                    <p className="text-[11px] font-mono text-white/30">{m.id}</p>
+                    <p className="font-medium text-brown dark:text-white">{m.name}</p>
+                    <p className="text-[11px] font-mono text-muted/70 dark:text-white/30">{m.id}</p>
                   </td>
-                  <td className="px-5 py-3.5 text-white/50 text-xs">{m.type}</td>
-                  <td className="px-5 py-3.5 text-white/40 text-xs">{m.location}</td>
-                  <td className="px-5 py-3.5 text-white/40 text-xs">{m.lastService}</td>
-                  <td className={`px-5 py-3.5 text-xs font-medium ${m.status === 'MAINTENANCE_DUE' ? 'text-amber-400' : 'text-white/50'}`}>
+                  <td className="px-5 py-3.5 text-xs text-muted dark:text-white/50">{m.type}</td>
+                  <td className="px-5 py-3.5 text-xs text-muted dark:text-white/40">{m.location}</td>
+                  <td className="px-5 py-3.5 text-xs text-muted dark:text-white/40">{m.lastService}</td>
+                  <td className={`px-5 py-3.5 text-xs font-medium ${m.status === 'MAINTENANCE_DUE' ? 'text-amber-400' : 'text-muted dark:text-white/50'}`}>
                     {m.nextService}
                   </td>
                   <td className="px-5 py-3.5">
@@ -128,7 +128,7 @@ export default function MachinesPage() {
                     <span className={`rounded-full px-2.5 py-1 text-[10px] font-semibold ${cfg.color}`}>{cfg.label}</span>
                   </td>
                   <td className="px-5 py-3.5 text-right">
-                    <button aria-label="View machine" className="rounded-lg p-1.5 text-white/30 transition hover:bg-white/8 hover:text-white">
+                    <button aria-label="View machine" className="rounded-lg p-1.5 text-muted/70 transition hover:bg-gray-100 hover:text-brown dark:text-white/30 dark:hover:bg-white/8 dark:hover:text-white">
                       <Eye className="h-4 w-4" />
                     </button>
                   </td>

@@ -36,11 +36,11 @@ export default function PayrollPage() {
         description="Monthly payroll summary including overtime, allowances and statutory deductions."
         actions={
           <div className="flex items-center gap-3">
-            <Link href="/hr" className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white/60 transition hover:bg-white/10">
+            <Link href="/hr" className="inline-flex items-center gap-2 rounded-xl border border-border bg-white px-3 py-2.5 text-sm text-muted transition hover:bg-gray-50 dark:border-white/10 dark:bg-white/5 dark:text-white/60 dark:hover:bg-white/10">
               <ArrowLeft className="h-4 w-4" />
               Back
             </Link>
-            <button className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white/60 transition hover:bg-white/10">
+            <button className="inline-flex items-center gap-2 rounded-xl border border-border bg-white px-3 py-2.5 text-sm text-muted transition hover:bg-gray-50 dark:border-white/10 dark:bg-white/5 dark:text-white/60 dark:hover:bg-white/10">
               <Download className="h-4 w-4" />
               Export CSV
             </button>
@@ -55,46 +55,46 @@ export default function PayrollPage() {
       {/* Summary */}
       <div className="grid grid-cols-4 gap-4">
         {[
-          { label: 'Total Net Pay', value: totalNet, color: 'text-orange', bg: 'bg-orange/8 border-orange/20' },
-          { label: 'Processed', value: `${totalPaid} employees`, color: 'text-emerald-400', bg: 'bg-emerald-500/8 border-emerald-500/20' },
-          { label: 'Pending Approval', value: `${totalPending} employees`, color: 'text-amber-400', bg: 'bg-amber-500/8 border-amber-500/20' },
-          { label: 'Total Deductions', value: '$481', color: 'text-red-400', bg: 'bg-red-500/8 border-red-500/20' },
+          { label: 'Total Net Pay', value: totalNet, color: 'text-orange', bg: 'border-orange/20 bg-orange/8' },
+          { label: 'Processed', value: `${totalPaid} employees`, color: 'text-emerald-400', bg: 'border-emerald-500/20 bg-emerald-500/8' },
+          { label: 'Pending Approval', value: `${totalPending} employees`, color: 'text-amber-400', bg: 'border-amber-500/20 bg-amber-500/8' },
+          { label: 'Total Deductions', value: '$481', color: 'text-red-400', bg: 'border-red-500/20 bg-red-500/8' },
         ].map((s) => (
           <div key={s.label} className={`rounded-2xl border p-4 ${s.bg}`}>
-            <p className="text-xs text-white/40">{s.label}</p>
+            <p className="text-xs text-muted dark:text-white/40">{s.label}</p>
             <p className={`mt-1.5 text-xl font-bold ${s.color}`}>{s.value}</p>
           </div>
         ))}
       </div>
 
       {/* Table */}
-      <div className="overflow-hidden rounded-2xl border border-white/8 bg-white/3">
+      <div className="overflow-hidden rounded-2xl border border-border bg-white dark:border-white/8 dark:bg-white/5">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-white/8">
-              <th className="px-5 py-3.5 text-left text-xs font-medium text-white/40">Employee</th>
-              <th className="px-5 py-3.5 text-left text-xs font-medium text-white/40">Dept</th>
-              <th className="px-5 py-3.5 text-right text-xs font-medium text-white/40">Basic</th>
-              <th className="px-5 py-3.5 text-right text-xs font-medium text-white/40">OT</th>
-              <th className="px-5 py-3.5 text-right text-xs font-medium text-white/40">Allow.</th>
-              <th className="px-5 py-3.5 text-right text-xs font-medium text-white/40">Deduct.</th>
-              <th className="px-5 py-3.5 text-right text-xs font-medium text-white/40">Net Pay</th>
-              <th className="px-5 py-3.5 text-left text-xs font-medium text-white/40">Status</th>
+            <tr className="border-b border-border dark:border-white/8">
+              <th className="px-5 py-3.5 text-left text-xs font-medium text-muted dark:text-white/40">Employee</th>
+              <th className="px-5 py-3.5 text-left text-xs font-medium text-muted dark:text-white/40">Dept</th>
+              <th className="px-5 py-3.5 text-right text-xs font-medium text-muted dark:text-white/40">Basic</th>
+              <th className="px-5 py-3.5 text-right text-xs font-medium text-muted dark:text-white/40">OT</th>
+              <th className="px-5 py-3.5 text-right text-xs font-medium text-muted dark:text-white/40">Allow.</th>
+              <th className="px-5 py-3.5 text-right text-xs font-medium text-muted dark:text-white/40">Deduct.</th>
+              <th className="px-5 py-3.5 text-right text-xs font-medium text-muted dark:text-white/40">Net Pay</th>
+              <th className="px-5 py-3.5 text-left text-xs font-medium text-muted dark:text-white/40">Status</th>
             </tr>
           </thead>
           <tbody>
             {payrollRows.map((row) => (
-              <tr key={row.id} className="border-b border-white/5 transition hover:bg-white/4 last:border-0">
+              <tr key={row.id} className="border-b border-border transition hover:bg-gray-50 last:border-0 dark:border-white/5 dark:hover:bg-white/4">
                 <td className="px-5 py-3.5">
-                  <p className="font-medium text-white">{row.name}</p>
-                  <p className="text-[11px] text-white/30">{row.id}</p>
+                  <p className="font-medium text-brown dark:text-white">{row.name}</p>
+                  <p className="text-[11px] text-muted/70 dark:text-white/30">{row.id}</p>
                 </td>
-                <td className="px-5 py-3.5 text-white/50 text-xs">{row.dept}</td>
-                <td className="px-5 py-3.5 text-right text-white/70">{row.basicSalary}</td>
+                <td className="px-5 py-3.5 text-xs text-muted dark:text-white/50">{row.dept}</td>
+                <td className="px-5 py-3.5 text-right text-brown dark:text-white/70">{row.basicSalary}</td>
                 <td className="px-5 py-3.5 text-right text-emerald-400">{row.overtime}</td>
-                <td className="px-5 py-3.5 text-right text-white/50">{row.allowances}</td>
+                <td className="px-5 py-3.5 text-right text-muted dark:text-white/50">{row.allowances}</td>
                 <td className="px-5 py-3.5 text-right text-red-400">{row.deductions}</td>
-                <td className="px-5 py-3.5 text-right font-bold text-white">{row.netPay}</td>
+                <td className="px-5 py-3.5 text-right font-bold text-brown dark:text-white">{row.netPay}</td>
                 <td className="px-5 py-3.5">
                   <span className={`rounded-full px-2.5 py-1 text-[10px] font-semibold ${statusColors[row.status]}`}>{row.status.replace('_', ' ')}</span>
                 </td>

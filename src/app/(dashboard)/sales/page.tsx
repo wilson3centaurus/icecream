@@ -29,7 +29,7 @@ const recentOrders = [
 ];
 
 const statusColors: Record<string, string> = {
-  DRAFT: 'bg-white/10 text-white/50',
+  DRAFT: 'bg-gray-100 text-muted dark:bg-white/10 dark:text-white/50',
   CONFIRMED: 'bg-blue-500/15 text-blue-400',
   PICKING: 'bg-amber-500/15 text-amber-400',
   DELIVERED: 'bg-emerald-500/15 text-emerald-400',
@@ -70,9 +70,9 @@ export default function SalesPage() {
             <div key={stat.label} className={`rounded-2xl border p-5 ${stat.color}`}>
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-xs font-medium text-white/50">{stat.label}</p>
-                  <p className="mt-1.5 font-display text-2xl font-bold text-white">{stat.value}</p>
-                  <p className={`mt-1 text-xs ${stat.up === true ? 'text-emerald-400' : stat.up === false ? 'text-red-400' : 'text-white/40'}`}>
+                  <p className="text-xs font-medium text-muted dark:text-white/50">{stat.label}</p>
+                  <p className="mt-1.5 font-display text-2xl font-bold text-brown dark:text-white">{stat.value}</p>
+                  <p className={`mt-1 text-xs ${stat.up === true ? 'text-emerald-400' : stat.up === false ? 'text-red-400' : 'text-muted dark:text-white/40'}`}>
                     {stat.change}
                   </p>
                 </div>
@@ -93,47 +93,47 @@ export default function SalesPage() {
             <Link
               key={link.href}
               href={link.href}
-              className="group flex items-center justify-between rounded-2xl border border-white/8 bg-white/5 p-5 transition-all hover:border-orange/30 hover:bg-white/10"
+              className="group flex items-center justify-between rounded-2xl border border-border bg-white p-5 transition-all hover:border-orange/30 hover:bg-gray-50 dark:border-white/8 dark:bg-white/5 dark:hover:bg-white/10"
             >
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange/15 text-orange">
                   <Icon className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="font-semibold text-white">{link.label}</p>
-                  <p className="text-xs text-white/40">{link.desc}</p>
+                  <p className="font-semibold text-brown dark:text-white">{link.label}</p>
+                  <p className="text-xs text-muted dark:text-white/40">{link.desc}</p>
                 </div>
               </div>
-              <ArrowRight className="h-4 w-4 text-white/30 transition-transform group-hover:translate-x-1 group-hover:text-orange" />
+              <ArrowRight className="h-4 w-4 text-muted/70 transition-transform group-hover:translate-x-1 group-hover:text-orange dark:text-white/30" />
             </Link>
           );
         })}
       </div>
 
       {/* Recent orders */}
-      <div className="rounded-2xl border border-white/8 bg-white/5">
-        <div className="flex items-center justify-between border-b border-white/8 px-5 py-4">
-          <h3 className="font-display font-semibold text-white">Recent Sales Orders</h3>
+      <div className="rounded-2xl border border-border bg-white dark:border-white/8 dark:bg-white/5">
+        <div className="flex items-center justify-between border-b border-border px-5 py-4 dark:border-white/8">
+          <h3 className="font-display font-semibold text-brown dark:text-white">Recent Sales Orders</h3>
           <Link href="/sales/orders" className="text-xs text-orange hover:underline">View all</Link>
         </div>
-        <div className="divide-y divide-white/5">
+        <div className="divide-y divide-border dark:divide-white/5">
           {recentOrders.map((order) => (
-            <div key={order.id} className="flex items-center justify-between px-5 py-4 transition hover:bg-white/5">
+            <div key={order.id} className="flex items-center justify-between px-5 py-4 transition hover:bg-gray-50 dark:hover:bg-white/5">
               <div className="flex items-center gap-4">
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-orange/10 text-orange">
                   <Package className="h-4 w-4" />
                 </div>
                 <div>
-                  <p className="font-semibold text-white">{order.id}</p>
-                  <p className="text-xs text-white/40">{order.customer} · {order.items} items</p>
+                  <p className="font-semibold text-brown dark:text-white">{order.id}</p>
+                  <p className="text-xs text-muted dark:text-white/40">{order.customer} · {order.items} items</p>
                 </div>
               </div>
               <div className="flex items-center gap-4">
-                <span className={`rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${statusColors[order.status] ?? 'bg-white/10 text-white/50'}`}>
+                <span className={`rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${statusColors[order.status] ?? 'bg-gray-100 text-muted dark:bg-white/10 dark:text-white/50'}`}>
                   {order.status}
                 </span>
-                <p className="text-sm font-semibold text-white">{order.total}</p>
-                <p className="hidden text-xs text-white/30 sm:block">{order.date}</p>
+                <p className="text-sm font-semibold text-brown dark:text-white">{order.total}</p>
+                <p className="hidden text-xs text-muted/70 sm:block dark:text-white/30">{order.date}</p>
               </div>
             </div>
           ))}
@@ -144,8 +144,8 @@ export default function SalesPage() {
       <div className="flex items-start gap-4 rounded-2xl border border-amber-500/20 bg-amber-500/10 p-5">
         <BadgeCheck className="mt-0.5 h-5 w-5 flex-shrink-0 text-amber-400" />
         <div>
-          <p className="font-semibold text-amber-300">Credit Control Active</p>
-          <p className="mt-1 text-sm text-amber-400/70">
+          <p className="font-semibold text-amber-700 dark:text-amber-300">Credit Control Active</p>
+          <p className="mt-1 text-sm text-amber-600/80 dark:text-amber-400/70">
             Sales above customer credit limits require Finance Manager approval (Level 3) before dispatch. Transactions cannot be edited after posting without authorization.
           </p>
         </div>
