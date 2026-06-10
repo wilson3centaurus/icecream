@@ -17,16 +17,15 @@ export interface AuthContext {
 /** Call at the top of every route handler. Returns null if not authenticated. */
 export async function getAuthContext(): Promise<AuthContext | null> {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return null;
+  // getSession() reads from cookies without a remote round-trip — much faster than getUser()
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session?.user) return null;
 
   const service = createServiceRoleClient();
   const { data: profile } = await service
     .from('users')
     .select('id, work_id, role, branch_id, status')
-    .eq('auth_id', user.id)
+    .eq('auth_id', session.user.id)
     .single();
 
   if (!profile || profile.status !== 'active') return null;

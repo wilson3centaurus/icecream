@@ -93,6 +93,50 @@ export default function LoginPage() {
         return;
       }
 
+      // Verify account status before entering the app
+      const profileRes = await fetch('/api/auth/profile', { cache: 'no-store' });
+      if (!profileRes.ok) {
+        await supabase.auth.signOut();
+        Swal.fire({
+          icon: 'error',
+          title: 'Account Not Found',
+          html: '<p>Your user profile could not be loaded.</p><p style="margin-top:8px;font-size:0.85rem;color:#666">Contact your system administrator.</p>',
+          confirmButtonColor: '#F97316',
+          background: '#fff7e8',
+          color: '#3B1F12',
+        });
+        return;
+      }
+
+      const profile = await profileRes.json() as { profile?: { status?: string } };
+      const accountStatus = profile?.profile?.status ?? 'active';
+
+      if (accountStatus === 'inactive') {
+        await supabase.auth.signOut();
+        Swal.fire({
+          icon: 'error',
+          title: 'Account Deactivated',
+          html: '<p>Your account has been deactivated.</p><p style="margin-top:8px;font-size:0.85rem;color:#666">Contact your system administrator to re-enable access.</p>',
+          confirmButtonColor: '#F97316',
+          background: '#fff7e8',
+          color: '#3B1F12',
+        });
+        return;
+      }
+
+      if (accountStatus === 'suspended') {
+        await supabase.auth.signOut();
+        Swal.fire({
+          icon: 'error',
+          title: 'Account Suspended',
+          html: '<p>Your account has been suspended.</p><p style="margin-top:8px;font-size:0.85rem;color:#666">Contact your system administrator.</p>',
+          confirmButtonColor: '#F97316',
+          background: '#fff7e8',
+          color: '#3B1F12',
+        });
+        return;
+      }
+
       await Swal.fire({
         icon: 'success',
         title: 'Welcome back!',

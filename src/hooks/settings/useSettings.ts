@@ -226,6 +226,23 @@ export function useUpdateUserStatus(userId: string) {
   return useSettingsMutation(`/api/users/${userId}`, 'PATCH');
 }
 
+export function useDeleteUser() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (userId: string) => {
+      const res = await fetch(`/api/users/${userId}`, { method: 'DELETE', credentials: 'include' });
+      if (!res.ok) {
+        const body = (await res.json().catch(() => ({}))) as { error?: string };
+        throw new Error(body.error ?? `Delete failed (${res.status})`);
+      }
+      return res.json();
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['settings', 'users'] });
+    },
+  });
+}
+
 export function useCreateRole() {
   return useSettingsMutation('/api/settings/roles', 'POST');
 }

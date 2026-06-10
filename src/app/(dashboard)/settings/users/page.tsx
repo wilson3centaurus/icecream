@@ -1,7 +1,7 @@
-﻿'use client';
+'use client';
 
 import { useMemo, useState } from 'react';
-import { UserPlus } from 'lucide-react';
+import { Check, Copy, Trash2, UserPlus } from 'lucide-react';
 
 import { DataTable, EmptyState, FilterBar, FormDrawer, LoadingState, StatusBadge } from '@/components/ui-library';
 
@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import {
   useAssignUserRoles,
   useCreateUser,
+  useDeleteUser,
   useRoles,
   useUpdateUserStatus,
   useUsers
@@ -30,6 +31,25 @@ interface UserRow {
 const inputClass =
   'h-11 w-full rounded-xl border border-border bg-cream px-3 text-brown outline-none focus:border-orange dark:border-darkBorder dark:bg-darkCard dark:text-darkText';
 
+function CopyButton({ value }: { value: string }) {
+  const [copied, setCopied] = useState(false);
+  async function handleCopy() {
+    await navigator.clipboard.writeText(value);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1800);
+  }
+  return (
+    <button
+      type="button"
+      onClick={handleCopy}
+      className="ml-2 inline-flex h-7 w-7 items-center justify-center rounded-lg bg-orange/10 text-orange transition hover:bg-orange/20"
+      title="Copy"
+    >
+      {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+    </button>
+  );
+}
+
 export default function SettingsUsersPage() {
   const [filters, setFilters] = useState({
     page: 1,
@@ -42,7 +62,7 @@ export default function SettingsUsersPage() {
   const rolesQuery = useRoles({ page: 1, pageSize: 100 });
 
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [createdWorkId, setCreatedWorkId] = useState<string | null>(null);
+  const [createdCreds, setCreatedCreds] = useState<{ workId: string; password: string } | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const [form, setForm] = useState({
@@ -67,7 +87,7 @@ export default function SettingsUsersPage() {
 
   function resetForm() {
     setForm({ firstName: '', lastName: '', email: '', idNumber: '', roleId: '' });
-    setCreatedWorkId(null);
+    setCreatedCreds(null);
     setErrorMessage(null);
   }
 
@@ -84,7 +104,9 @@ export default function SettingsUsersPage() {
     }
     try {
       const result = (await createUser.mutateAsync(form)) as { workId?: string };
-      setCreatedWorkId(result?.workId ?? null);
+      const workId = result?.workId ?? '';
+      const password = form.idNumber.replace(/[-\s]/g, '').toLowerCase();
+      setCreatedCreds({ workId, password });
       setForm({ firstName: '', lastName: '', email: '', idNumber: '', roleId: '' });
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : 'Failed to create user.');
@@ -154,6 +176,7 @@ export default function SettingsUsersPage() {
               <div className="flex flex-wrap gap-2">
                 <RoleAssignButton userId={row.id} currentRole={row.role} allRoles={roles} />
                 <StatusToggleButton userId={row.id} status={row.status} />
+                <DeleteUserButton userId={row.id} fullName={row.fullName} onDeleted={() => usersQuery.refetch()} />
               </div>
             ),
           }
@@ -170,24 +193,39 @@ export default function SettingsUsersPage() {
 
       {/* Add User Drawer */}
       <FormDrawer title="Add User" open={drawerOpen} onClose={handleClose}>
-        {createdWorkId ? (
+        {createdCreds ? (
           <div className="space-y-4">
-            <div className="rounded-xl border border-emerald-300 bg-emerald-50 p-4 dark:border-emerald-700 dark:bg-emerald-900/20">
+            <div className="rounded-xl border border-emerald-300 bg-emerald-50 p-5 dark:border-emerald-700 dark:bg-emerald-900/20">
               <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-300">
                 User created successfully!
               </p>
               <p className="mt-1 text-xs text-emerald-600 dark:text-emerald-400">
-                Work ID sent via email (if configured). Share the credentials below:
-              </p>
-              <div className="mt-3 rounded-lg bg-white px-4 py-3 dark:bg-darkCard">
-                <p className="text-xs text-muted dark:text-darkMuted">Work ID</p>
-                <p className="font-mono text-lg font-bold text-orange">{createdWorkId}</p>
-              </div>
-              <p className="mt-2 text-xs text-emerald-600 dark:text-emerald-400">
-                Initial password: ID number without dashes/spaces in lowercase.
+                Share these login credentials with the user directly:
               </p>
             </div>
-            <Button onClick={handleClose}>Done</Button>
+
+            <div className="space-y-3 rounded-xl border border-border bg-cream p-4 dark:border-darkBorder dark:bg-darkCard">
+              <div>
+                <p className="text-[11px] font-medium uppercase tracking-wide text-muted dark:text-darkMuted">Work ID</p>
+                <div className="mt-1 flex items-center">
+                  <span className="font-mono text-lg font-bold text-orange">{createdCreds.workId}</span>
+                  <CopyButton value={createdCreds.workId} />
+                </div>
+              </div>
+              <div className="h-px bg-border dark:bg-darkBorder" />
+              <div>
+                <p className="text-[11px] font-medium uppercase tracking-wide text-muted dark:text-darkMuted">Initial Password</p>
+                <div className="mt-1 flex items-center">
+                  <span className="font-mono text-sm font-semibold text-brown dark:text-darkText">{createdCreds.password}</span>
+                  <CopyButton value={createdCreds.password} />
+                </div>
+                <p className="mt-1 text-[11px] text-muted/70 dark:text-darkMuted/70">
+                  ID number without dashes/spaces in lowercase. Ask user to change after first login.
+                </p>
+              </div>
+            </div>
+
+            <Button onClick={handleClose} className="w-full">Done</Button>
           </div>
         ) : (
           <div className="space-y-4">
@@ -232,7 +270,7 @@ export default function SettingsUsersPage() {
                 className={inputClass}
               />
               <p className="text-[11px] text-muted/70 dark:text-darkMuted/70">
-                Initial password will be the ID number without dashes/spaces in lowercase.
+                Initial password = ID number without dashes/spaces in lowercase.
               </p>
             </label>
 
@@ -306,8 +344,9 @@ function RoleAssignButton({
               await assignRole.mutateAsync({ role: selected });
               setEditing(false);
             }}
+            disabled={assignRole.isPending}
           >
-            Save
+            {assignRole.isPending ? 'Saving…' : 'Save Role'}
           </Button>
         </div>
       </FormDrawer>
@@ -317,17 +356,120 @@ function RoleAssignButton({
 
 function StatusToggleButton({ userId, status }: { userId: string; status: string }) {
   const updateStatus = useUpdateUserStatus(userId);
-  const nextStatus = status === 'active' ? 'inactive' : 'active';
+  const [open, setOpen] = useState(false);
+
+  const statusOptions: Array<{ value: string; label: string; className: string }> = [
+    { value: 'active', label: 'Set Active', className: 'text-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:hover:bg-emerald-900/20' },
+    { value: 'inactive', label: 'Deactivate', className: 'text-amber-600 hover:bg-amber-50 dark:text-amber-400 dark:hover:bg-amber-900/20' },
+    { value: 'suspended', label: 'Suspend', className: 'text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20' },
+  ].filter((opt) => opt.value !== status);
+
+  async function handleStatusChange(newStatus: string) {
+    await updateStatus.mutateAsync({ status: newStatus });
+    setOpen(false);
+  }
 
   return (
-    <Button
-      size="sm"
-      variant="outline"
-      onClick={async () => {
-        await updateStatus.mutateAsync({ status: nextStatus });
-      }}
-    >
-      {status === 'active' ? 'Deactivate' : 'Activate'}
-    </Button>
+    <div className="relative">
+      <Button
+        size="sm"
+        variant="outline"
+        onClick={() => setOpen((v) => !v)}
+        disabled={updateStatus.isPending}
+        className={
+          status === 'active'
+            ? 'border-emerald-300 text-emerald-700 dark:border-emerald-700 dark:text-emerald-400'
+            : status === 'suspended'
+              ? 'border-red-300 text-red-700 dark:border-red-700 dark:text-red-400'
+              : 'border-amber-300 text-amber-700 dark:border-amber-700 dark:text-amber-400'
+        }
+      >
+        {updateStatus.isPending ? '…' : status.charAt(0).toUpperCase() + status.slice(1)}
+      </Button>
+      {open && (
+        <>
+          <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
+          <div className="absolute left-0 top-full z-20 mt-1 w-36 overflow-hidden rounded-xl border border-border bg-white shadow-card-hover dark:border-darkBorder dark:bg-[#1a0800]">
+            {statusOptions.map((opt) => (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => handleStatusChange(opt.value)}
+                className={`w-full px-4 py-2.5 text-left text-sm font-medium transition ${opt.className}`}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+function DeleteUserButton({
+  userId,
+  fullName,
+  onDeleted,
+}: {
+  userId: string;
+  fullName: string;
+  onDeleted: () => void;
+}) {
+  const [confirm, setConfirm] = useState(false);
+  const deleteUser = useDeleteUser();
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleDelete() {
+    setError(null);
+    try {
+      await deleteUser.mutateAsync(userId);
+      setConfirm(false);
+      onDeleted();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Delete failed.');
+    }
+  }
+
+  return (
+    <>
+      <Button
+        size="sm"
+        variant="outline"
+        onClick={() => { setError(null); setConfirm(true); }}
+        className="border-red-200 text-red-600 hover:border-red-400 hover:bg-red-50 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-900/20"
+      >
+        <Trash2 className="h-3.5 w-3.5" />
+      </Button>
+
+      <FormDrawer title="Delete User" open={confirm} onClose={() => setConfirm(false)}>
+        <div className="space-y-4">
+          <div className="rounded-xl border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20">
+            <p className="text-sm font-semibold text-red-700 dark:text-red-300">This action cannot be undone</p>
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+              You are about to permanently delete <span className="font-semibold">{fullName}</span>.
+              Their account and all login access will be removed.
+            </p>
+          </div>
+          {error && (
+            <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 dark:border-red-800 dark:bg-red-900/20 dark:text-red-400">
+              {error}
+            </p>
+          )}
+          <div className="flex gap-3">
+            <Button variant="outline" onClick={() => setConfirm(false)} className="flex-1">
+              Cancel
+            </Button>
+            <Button
+              onClick={handleDelete}
+              disabled={deleteUser.isPending}
+              className="flex-1 bg-red-600 text-white hover:bg-red-700"
+            >
+              {deleteUser.isPending ? 'Deleting…' : 'Delete User'}
+            </Button>
+          </div>
+        </div>
+      </FormDrawer>
+    </>
   );
 }

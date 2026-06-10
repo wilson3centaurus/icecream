@@ -44,7 +44,9 @@ export function Providers({ children }: ProvidersProps) {
         defaultOptions: {
           queries: {
             refetchOnWindowFocus: false,
-            staleTime: 60_000
+            staleTime: 5 * 60_000,   // 5 min — no need to refetch while browsing
+            gcTime: 10 * 60_000,      // keep in memory for 10 min
+            retry: 1,
           }
         }
       }),
