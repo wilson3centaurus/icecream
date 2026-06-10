@@ -1,5 +1,6 @@
 ﻿'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import {
   BarChart3,
@@ -151,8 +152,8 @@ export function Sidebar() {
       {/* Brand */}
       <div className="border-b border-white/10 px-4 py-5">
         <div className="flex items-center gap-3">
-          <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-orange text-white font-bold text-sm shadow-glow-sm">
-            A
+          <div className="relative h-10 w-10 flex-shrink-0 overflow-hidden rounded-xl shadow-glow-sm">
+            <Image src="/branding/logo.png" alt="" fill sizes="40px" className="object-cover" priority />
             <span className="absolute -right-0.5 -top-0.5 flex h-3 w-3 items-center justify-center rounded-full bg-emerald-400">
               <span className="h-1.5 w-1.5 rounded-full bg-white" />
             </span>

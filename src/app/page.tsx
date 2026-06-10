@@ -559,7 +559,9 @@ export default function HomePage() {
       <footer className="border-t border-white/8 bg-[#0D0500] py-12">
         <div className="section-shell flex flex-col items-center gap-4 text-center sm:flex-row sm:justify-between sm:text-left">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-orange text-white text-sm font-bold">A</div>
+            <div className="relative h-9 w-9 flex-shrink-0 overflow-hidden rounded-xl">
+              <Image src="/branding/logo.png" alt="" fill sizes="36px" className="object-cover" />
+            </div>
             <div>
               <p className="font-semibold text-white">Absolute Ice Cream ERP</p>
               <p className="text-xs text-white/40">Manufacturing Intelligence Platform</p>

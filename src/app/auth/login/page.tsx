@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Swal from 'sweetalert2';
@@ -124,17 +125,33 @@ export default function LoginPage() {
     <main className="grid min-h-screen bg-cream lg:grid-cols-2">
       <section className="hidden bg-[#3B1F12] p-10 text-[#F8EBD8] lg:flex lg:flex-col lg:justify-between">
         <div>
-          <p className="text-sm uppercase tracking-[0.22em] text-[#F4C89B]">Absolute Ice Cream ERP</p>
-          <h1 className="mt-6 text-5xl font-semibold leading-tight">Staff Login Portal</h1>
+          <div className="flex items-center gap-3">
+            <div className="relative h-12 w-12 overflow-hidden rounded-2xl">
+              <Image src="/branding/logo.png" alt="Absolute Ice Cream ERP" fill sizes="48px" className="object-cover" priority />
+            </div>
+            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#F4C89B]">Absolute Ice Cream ERP</p>
+          </div>
+          <h1 className="mt-8 text-5xl font-semibold leading-tight">Staff Login Portal</h1>
           <p className="mt-4 max-w-lg text-base text-[#f1dbc3]">Sign in with your Work ID and password.</p>
         </div>
         <div className="rounded-3xl border border-[#f4c89b33] bg-[#4b2817] p-6">
-          <p className="text-sm text-[#f1dbc3]">Absolute Quality Icecream</p>
+          <div className="flex items-center gap-3">
+            <div className="relative h-10 w-10 overflow-hidden rounded-xl">
+              <Image src="/branding/icon-192.png" alt="" fill sizes="40px" className="object-cover" />
+            </div>
+            <p className="text-sm text-[#f1dbc3]">Absolute Quality Icecream</p>
+          </div>
         </div>
       </section>
 
       <section className="flex items-center justify-center px-6 py-10">
         <div className="w-full max-w-xl rounded-2xl bg-white p-8 shadow-soft">
+          <div className="mb-6 flex items-center gap-3 lg:hidden">
+            <div className="relative h-10 w-10 overflow-hidden rounded-xl">
+              <Image src="/branding/logo.png" alt="Absolute Ice Cream ERP" fill sizes="40px" className="object-cover" priority />
+            </div>
+            <p className="text-sm font-semibold text-brown">Absolute Ice Cream ERP</p>
+          </div>
           <h2 className="text-3xl font-semibold text-brown">Welcome Back</h2>
           <p className="mt-2 text-sm text-muted">Sign in with your Work ID and password.</p>
 
