@@ -8,7 +8,7 @@ import { EmptyState, LoadingState, StatCard } from '@/components/ui-library';
 import { PageHeader } from '@/components/dashboard/page-header';
 import { SettingsNav } from '@/components/settings/settings-nav';
 import { Button } from '@/components/ui/button';
-import { useSettingsOverview, useSettingsSummary, useUpdateSettingsOverview, useEmailConfig, useUpdateEmailConfig, type EmailConfigData } from '@/hooks/settings/useSettings';
+import { useSettingsOverview, useSettingsSummary, useUpdateSettingsOverview, useEmailConfig, useUpdateEmailConfig, useSendTestEmail, type EmailConfigData } from '@/hooks/settings/useSettings';
 
 interface SettingsFormState {
   companyProfile: {
@@ -73,6 +73,7 @@ export default function SettingsOverviewPage() {
   const updateOverview = useUpdateSettingsOverview();
   const emailConfigQuery = useEmailConfig();
   const updateEmailConfig = useUpdateEmailConfig();
+  const sendTestEmail = useSendTestEmail();
   const [formState, setFormState] = useState<SettingsFormState>(defaultState);
   const [message, setMessage] = useState<string | null>(null);
   const [emailForm, setEmailForm] = useState<EmailConfigData>(defaultEmailConfig);
@@ -250,24 +251,41 @@ export default function SettingsOverviewPage() {
 
       {/* Email / SMTP Configuration */}
       <section className="space-y-4 rounded-2xl border border-border bg-white p-6 shadow-sm dark:border-darkBorder dark:bg-darkCard">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <Mail className="h-5 w-5 text-orange" />
             <h3 className="text-lg font-semibold text-brown dark:text-darkText">Email / SMTP Configuration</h3>
           </div>
-          <Button
-            onClick={async () => {
-              try {
-                await updateEmailConfig.mutateAsync(emailForm);
-                setEmailMessage('Email settings saved.');
-              } catch (error) {
-                setEmailMessage(error instanceof Error ? error.message : 'Failed to save email settings.');
-              }
-            }}
-            disabled={updateEmailConfig.isPending}
-          >
-            {updateEmailConfig.isPending ? 'Saving…' : 'Save Email Settings'}
-          </Button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={async () => {
+                try {
+                  const result = await sendTestEmail.mutateAsync(emailForm.fromEmail);
+                  setEmailMessage(`Test email sent to ${result.recipient ?? emailForm.fromEmail}. Check your inbox.`);
+                } catch (error) {
+                  setEmailMessage(error instanceof Error ? error.message : 'Test email failed.');
+                }
+              }}
+              disabled={sendTestEmail.isPending || updateEmailConfig.isPending}
+              className="rounded-xl border border-border px-4 py-2 text-sm font-medium text-brown transition hover:bg-gray-50 disabled:opacity-50 dark:border-darkBorder dark:text-darkText dark:hover:bg-darkBg"
+            >
+              {sendTestEmail.isPending ? 'Sending…' : 'Send Test Email'}
+            </button>
+            <Button
+              onClick={async () => {
+                try {
+                  await updateEmailConfig.mutateAsync(emailForm);
+                  setEmailMessage('Email settings saved.');
+                } catch (error) {
+                  setEmailMessage(error instanceof Error ? error.message : 'Failed to save email settings.');
+                }
+              }}
+              disabled={updateEmailConfig.isPending}
+            >
+              {updateEmailConfig.isPending ? 'Saving…' : 'Save Settings'}
+            </Button>
+          </div>
         </div>
         <p className="text-sm text-muted dark:text-darkMuted">
           Configure the SMTP sender used for system notifications. Use a Gmail App Password (not your regular password) if using Google Workspace.

@@ -275,6 +275,22 @@ export function useUpdateEmailConfig() {
   });
 }
 
+export function useSendTestEmail() {
+  return useMutation({
+    mutationFn: async (recipient?: string) => {
+      const res = await fetch('/api/settings/email-config/test', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ recipient: recipient ?? '' }),
+      });
+      const data = await res.json() as { ok?: boolean; recipient?: string; error?: string };
+      if (!res.ok) throw new Error(data.error ?? `Request failed (${res.status})`);
+      return data;
+    },
+  });
+}
+
 export function useCreateRole() {
   return useSettingsMutation('/api/settings/roles', 'POST');
 }
